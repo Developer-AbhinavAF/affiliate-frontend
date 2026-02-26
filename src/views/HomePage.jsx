@@ -36,7 +36,7 @@ function CategoryTile({ to, title, subtitle, icon: Icon, gradient }) {
 export function HomePage() {
   return (
     <div className="space-y-10">
-      <div className="relative overflow-hidden rounded-sm border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 md:p-12">
+      <div className="relative overflow-hidden rounded-sm border border-zinc-200 bg-gradient-to-br from-white to-[#f5f1e8] p-8 shadow-sm dark:border-zinc-800 dark:from-zinc-950 dark:to-zinc-900 md:p-12">
         <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-zinc-900/10 blur-3xl dark:bg-white/10" />
         <div className="pointer-events-none absolute -right-24 -bottom-24 h-72 w-72 rounded-full bg-zinc-900/5 blur-3xl dark:bg-white/10" />
 
@@ -44,12 +44,12 @@ export function HomePage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="text-3xl font-semibold leading-tight text-zinc-900 dark:text-zinc-50 md:text-5xl"
+          className="text-3xl font-semibold leading-tight text-zinc-950 dark:text-zinc-50 md:text-5xl"
         >
           Shop smarter with
-          <span className="text-zinc-900 dark:text-zinc-50"> TrendKart</span>
+          <span className="text-zinc-950 dark:text-zinc-50"> TrendKart</span>
         </motion.h1>
-        <p className="mt-4 max-w-2xl text-base text-zinc-600 dark:text-zinc-400 md:text-lg">
+        <p className="mt-4 max-w-2xl text-base text-zinc-700 dark:text-zinc-400 md:text-lg">
           Multi-vendor e-commerce with fast search, smooth UI, and COD checkout. Discover products across categories
           and track your orders in real time.
         </p>

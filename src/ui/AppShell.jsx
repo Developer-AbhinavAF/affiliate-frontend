@@ -50,7 +50,7 @@ function TopNav() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `rounded-full px-3 py-1.5 text-sm transition ${
+                `rounded-sm px-3 py-1.5 text-sm transition ${
                   isActive
                     ? 'bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900'
                     : 'text-zinc-700 hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-zinc-50'
@@ -113,7 +113,7 @@ function TopNav() {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition ${
+                `whitespace-nowrap rounded-sm px-3 py-1.5 text-sm transition ${
                   isActive
                     ? 'bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900'
                     : 'text-zinc-700 hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-zinc-50'
