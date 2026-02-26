@@ -33,17 +33,17 @@ export function AdminSellersPage() {
 
   const rows = useMemo(() => data || [], [data])
 
-  if (isLoading) return <div className="text-sm text-white/70">Loading…</div>
-  if (isError) return <div className="text-sm text-white/70">Failed to load sellers</div>
+  if (isLoading) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
+  if (isError) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Failed to load sellers</div>
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <div className="text-sm text-white/70">Filter:</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">Filter:</div>
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80 outline-none"
+          className="rounded-xl border border-zinc-200 bg-white/70 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-zinc-700"
         >
           <option value="">All</option>
           {statuses.map((s) => (
@@ -54,11 +54,11 @@ export function AdminSellersPage() {
         </select>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-        <div className="text-sm font-medium text-white">Seller Approvals</div>
+      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+        <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Seller Approvals</div>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[900px] text-left text-sm">
-            <thead className="text-white/60">
+            <thead className="text-zinc-600 dark:text-zinc-400">
               <tr>
                 <th className="py-2">Name</th>
                 <th className="py-2">Username</th>
@@ -69,31 +69,31 @@ export function AdminSellersPage() {
             </thead>
             <tbody>
               {rows.map((s) => (
-                <tr key={s._id || s.id} className="border-t border-white/10">
-                  <td className="py-2 text-white/80">{s.name}</td>
-                  <td className="py-2 text-white/80">{s.username || ''}</td>
-                  <td className="py-2 text-white/80">{s.email}</td>
-                  <td className="py-2 text-white/80">{s.sellerStatus}</td>
+                <tr key={s._id || s.id} className="border-t border-zinc-200/70 dark:border-zinc-800">
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{s.name}</td>
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{s.username || ''}</td>
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{s.email}</td>
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{s.sellerStatus}</td>
                   <td className="py-2">
                     <div className="flex flex-wrap gap-2">
                       <button
                         disabled={setSellerStatus.isPending}
                         onClick={() => setSellerStatus.mutate({ id: s._id || s.id, sellerStatus: 'APPROVED' })}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-white/80 hover:bg-white/10 disabled:opacity-60"
+                        className="rounded-xl border border-zinc-200 bg-white/60 px-3 py-1.5 text-zinc-900 hover:bg-white disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
                       >
                         Approve
                       </button>
                       <button
                         disabled={setSellerStatus.isPending}
                         onClick={() => setSellerStatus.mutate({ id: s._id || s.id, sellerStatus: 'SUSPENDED' })}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-white/80 hover:bg-white/10 disabled:opacity-60"
+                        className="rounded-xl border border-zinc-200 bg-white/60 px-3 py-1.5 text-zinc-900 hover:bg-white disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
                       >
                         Suspend
                       </button>
                       <button
                         disabled={setSellerStatus.isPending}
                         onClick={() => setSellerStatus.mutate({ id: s._id || s.id, sellerStatus: 'REJECTED' })}
-                        className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-white/80 hover:bg-white/10 disabled:opacity-60"
+                        className="rounded-xl border border-zinc-200 bg-white/60 px-3 py-1.5 text-zinc-900 hover:bg-white disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
                       >
                         Reject
                       </button>
@@ -103,7 +103,7 @@ export function AdminSellersPage() {
               ))}
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-6 text-center text-white/60">
+                  <td colSpan={5} className="py-6 text-center text-zinc-600 dark:text-zinc-400">
                     No sellers
                   </td>
                 </tr>
