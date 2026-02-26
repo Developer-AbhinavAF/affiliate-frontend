@@ -4,26 +4,27 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../state/auth'
 import { useToast } from '../components/Toaster/Toaster'
 
-export function LoginPage() {
+export function SellerLoginPage() {
   const nav = useNavigate()
   const { login } = useAuth()
   const { push } = useToast()
 
-  const [identifier, setIdentifier] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
 
   return (
     <div className="mx-auto max-w-md">
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.45)] backdrop-blur">
-        <div className="text-2xl font-semibold text-white">Welcome back</div>
-        <div className="mt-1 text-sm text-white/70">Login to unlock personalized picks.</div>
+        <div className="text-2xl font-semibold text-white">Seller Login</div>
+        <div className="mt-1 text-sm text-white/70">Sign in to manage products and orders.</div>
 
         <div className="mt-6 space-y-3">
           <input
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            placeholder="Email or Username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="Email"
             className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white/90 outline-none placeholder:text-white/40 focus:border-white/20"
           />
           <input
@@ -40,18 +41,10 @@ export function LoginPage() {
           onClick={async () => {
             try {
               setBusy(true)
-              const input = identifier.trim()
-              const isEmail = input.includes('@')
-              const u = await login(isEmail ? { email: input, password } : { username: input, password })
+              await login({ email, password })
               push('Logged in')
-              const byRole = {
-                SUPER_ADMIN: '/superadmin',
-                ADMIN: '/admin',
-                SELLER: '/seller',
-                CUSTOMER: '/',
-              }
-              nav(byRole[u?.role] || '/')
-            } catch (e) {
+              nav('/seller')
+            } catch {
               push('Login failed')
             } finally {
               setBusy(false)
@@ -63,9 +56,9 @@ export function LoginPage() {
         </button>
 
         <div className="mt-4 text-sm text-white/70">
-          Don’t have an account?{' '}
+          Want to become a seller?{' '}
           <Link to="/signup" className="text-white hover:underline">
-            Sign up
+            Create an account
           </Link>
         </div>
       </div>

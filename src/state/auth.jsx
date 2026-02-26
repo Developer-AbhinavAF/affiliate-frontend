@@ -31,11 +31,13 @@ export function AuthProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
-  async function login(email, password) {
-    const { data } = await api.post('/api/auth/login', { email, password })
+  async function login({ email, username, password }) {
+    const payload = username ? { username, password } : { email, password }
+    const { data } = await api.post('/api/auth/login', payload)
     localStorage.setItem('token', data.token)
     setToken(data.token)
     setUser(data.user)
+    return data.user
   }
 
   async function signup(name, email, password) {

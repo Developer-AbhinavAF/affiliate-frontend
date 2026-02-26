@@ -43,20 +43,18 @@ export function HomePage() {
           transition={{ duration: 0.5, ease: 'easeOut' }}
           className="text-3xl font-semibold leading-tight text-white md:text-5xl"
         >
-          A modern affiliate store for
-          <span className="bg-gradient-to-r from-indigo-300 to-pink-300 bg-clip-text text-transparent">
-            {' '}electrical, fitness & fashion
-          </span>
+          Shop smarter with
+          <span className="bg-linear-to-r from-indigo-300 to-pink-300 bg-clip-text text-transparent"> TrendKart</span>
         </motion.h1>
         <p className="mt-4 max-w-2xl text-base text-white/70 md:text-lg">
-          Browse curated products and jump to trusted marketplaces with one click. Smooth animations, fast pages,
-          and a clean UI built to convert.
+          Multi-vendor e-commerce with fast search, smooth UI, and COD checkout. Discover products across categories
+          and track your orders in real time.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             to="/category/electrical"
-            className="rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 px-5 py-2.5 text-sm font-medium text-white shadow-[0_10px_25px_rgba(99,102,241,0.25)] transition hover:opacity-95"
+            className="rounded-full bg-linear-to-r from-indigo-500 to-pink-500 px-5 py-2.5 text-sm font-medium text-white shadow-[0_10px_25px_rgba(99,102,241,0.25)] transition hover:opacity-95"
           >
             Shop now
           </Link>
