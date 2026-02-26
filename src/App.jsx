@@ -18,6 +18,9 @@ import { SuperAdminCommissionPage } from './dashboard/pages/SuperAdminCommission
 import { SuperAdminOrdersPage } from './dashboard/pages/SuperAdminOrdersPage'
 import { SuperAdminProductsPage } from './dashboard/pages/SuperAdminProductsPage'
 import { SuperAdminSellersPage } from './dashboard/pages/SuperAdminSellersPage'
+import { SuperAdminUsersPage } from './dashboard/pages/SuperAdminUsersPage'
+import { SuperAdminAdvancedAnalyticsPage } from './dashboard/pages/SuperAdminAdvancedAnalyticsPage'
+import { SuperAdminPlatformControlsPage } from './dashboard/pages/SuperAdminPlatformControlsPage'
 import { HomePage } from './views/HomePage'
 import { AdminLoginPage } from './views/AdminLoginPage'
 import { CategoryPage } from './views/CategoryPage'
@@ -77,12 +80,15 @@ function App() {
               <Route element={<RequireRole allowedRoles={['SUPER_ADMIN']} loginPath="/superadmin/login" />}>
                 <Route element={<DashboardLayout title="Super Admin Panel" />}>
                   <Route path="/superadmin" element={<SuperAdminDashboard />} />
+                  <Route path="/superadmin/users" element={<SuperAdminUsersPage />} />
                   <Route path="/superadmin/admins" element={<SuperAdminAdminsPage />} />
                   <Route path="/superadmin/sellers" element={<SuperAdminSellersPage />} />
                   <Route path="/superadmin/products" element={<SuperAdminProductsPage />} />
                   <Route path="/superadmin/orders" element={<SuperAdminOrdersPage />} />
                   <Route path="/superadmin/commission" element={<SuperAdminCommissionPage />} />
+                  <Route path="/superadmin/advanced-analytics" element={<SuperAdminAdvancedAnalyticsPage />} />
                   <Route path="/superadmin/reports" element={<ReportsPage />} />
+                  <Route path="/superadmin/platform-controls" element={<SuperAdminPlatformControlsPage />} />
                 </Route>
               </Route>
 
