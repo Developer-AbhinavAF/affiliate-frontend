@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 
 import { api } from '../lib/api'
 import { ProductCard } from '../ui/ProductCard'
@@ -34,7 +35,12 @@ export function CategoryPage() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-6 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="rounded-sm border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <div className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">{meta.title}</div>
         <div className="text-sm text-zinc-600 dark:text-zinc-400">{meta.subtitle}</div>
 
@@ -43,10 +49,10 @@ export function CategoryPage() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search products…"
-            className="w-full rounded-xl border border-zinc-200 bg-white/70 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+            className="w-full rounded-sm border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
           />
         </div>
-      </div>
+      </motion.div>
 
       {isLoading ? (
         <div className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>

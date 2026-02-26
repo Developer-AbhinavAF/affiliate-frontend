@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { api } from '../../lib/api'
@@ -37,7 +38,13 @@ export function SellerDashboard() {
         <KpiCard label="Commission Deducted" value={`₹ ${Math.round(k.commissionDeducted).toLocaleString()}`} />
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="rounded-sm border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Recent Orders</div>
         {ordersQuery.isLoading ? (
           <div className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
@@ -48,9 +55,15 @@ export function SellerDashboard() {
             <RecentOrdersTable orders={ordersQuery.data || []} />
           </div>
         )}
-      </div>
+      </motion.div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="rounded-sm border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Monthly Sales</div>
         <div className="mt-4 h-72">
           <ResponsiveContainer width="100%" height="100%">
@@ -75,7 +88,7 @@ export function SellerDashboard() {
             </AreaChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

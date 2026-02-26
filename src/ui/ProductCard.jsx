@@ -5,9 +5,12 @@ import { ExternalLink, Star } from 'lucide-react'
 export function ProductCard({ product }) {
   return (
     <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.35 }}
       whileHover={{ y: -6 }}
       transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-      className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white/60 shadow-sm backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40"
+      className="group overflow-hidden rounded-sm border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
@@ -35,7 +38,7 @@ export function ProductCard({ product }) {
           <div className="flex items-center gap-2">
             <Link
               to={`/product/${product._id}`}
-              className="rounded-full border border-zinc-200 bg-white/60 px-3 py-1.5 text-xs text-zinc-900 transition hover:bg-white dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
+              className="rounded-sm border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-900 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
             >
               View
             </Link>
@@ -43,7 +46,7 @@ export function ProductCard({ product }) {
               href={product.affiliateUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1 rounded-full bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-50 transition hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              className="inline-flex items-center gap-1 rounded-sm bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-50 transition hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
               Buy
               <ExternalLink className="h-3.5 w-3.5" />

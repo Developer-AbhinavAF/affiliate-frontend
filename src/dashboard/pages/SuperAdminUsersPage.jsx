@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -58,13 +59,13 @@ export function SuperAdminUsersPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search name / username / email"
-          className="w-72 rounded-xl border border-zinc-200 bg-white/70 px-4 py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+          className="w-72 rounded-sm border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
         />
 
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="rounded-xl border border-zinc-200 bg-white/70 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-zinc-700"
+          className="rounded-sm border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-zinc-700"
         >
           {roles.map((r) => (
             <option key={r || 'ALL'} value={r}>
@@ -74,7 +75,13 @@ export function SuperAdminUsersPage() {
         </select>
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="rounded-sm border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      >
         <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">All Users</div>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[1100px] text-left text-sm">
@@ -103,7 +110,7 @@ export function SuperAdminUsersPage() {
                       <button
                         disabled={toggleUser.isPending || u.role === 'SUPER_ADMIN'}
                         onClick={() => toggleUser.mutate(u._id)}
-                        className="rounded-xl border border-zinc-200 bg-white/60 px-3 py-1.5 text-zinc-900 hover:bg-white disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                        className="rounded-sm border border-zinc-200 bg-white px-3 py-1.5 text-zinc-900 hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
                       >
                         {u.disabled ? 'Enable' : 'Disable'}
                       </button>
@@ -113,7 +120,7 @@ export function SuperAdminUsersPage() {
                           key={r}
                           disabled={changeRole.isPending || u.role === 'SUPER_ADMIN' || u.role === r}
                           onClick={() => changeRole.mutate({ id: u._id, nextRole: r })}
-                          className="rounded-xl border border-zinc-200 bg-white/60 px-3 py-1.5 text-zinc-900 hover:bg-white disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                          className="rounded-sm border border-zinc-200 bg-white px-3 py-1.5 text-zinc-900 hover:bg-zinc-50 disabled:opacity-60 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
                         >
                           Set {r}
                         </button>
@@ -132,7 +139,7 @@ export function SuperAdminUsersPage() {
             </tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

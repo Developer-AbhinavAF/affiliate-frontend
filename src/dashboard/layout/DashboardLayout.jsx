@@ -9,7 +9,7 @@ function SidebarItem({ to, icon: Icon, label }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition ${
+        `flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition ${
           isActive
             ? 'bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900'
             : 'text-zinc-700 hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-zinc-50'
@@ -76,12 +76,12 @@ export function DashboardLayout({ title }) {
     <div className="min-h-screen">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
         <aside className="hidden w-64 shrink-0 md:block">
-          <div className="rounded-2xl border border-zinc-200 bg-white/60 p-3 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+          <div className="rounded-sm border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900">
             <div className="flex items-center gap-2 px-2 py-2">
               <img
                 src="/Logo.jpeg"
                 alt="TrendKart"
-                className="h-9 w-9 rounded-xl border border-zinc-200 object-cover dark:border-zinc-800"
+                className="h-9 w-9 rounded-sm border border-zinc-200 object-cover dark:border-zinc-800"
               />
               <div className="leading-tight">
                 <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">TrendKart</div>
@@ -105,7 +105,7 @@ export function DashboardLayout({ title }) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-                className="grid h-10 w-10 place-items-center rounded-xl border border-zinc-200 bg-white/60 text-zinc-800 transition hover:bg-white dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100 dark:hover:bg-zinc-900"
+                className="grid h-10 w-10 place-items-center rounded-sm border border-zinc-200 bg-white text-zinc-800 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
                 aria-label="Toggle dark mode"
                 type="button"
               >
@@ -113,7 +113,7 @@ export function DashboardLayout({ title }) {
               </button>
               <button
                 onClick={logout}
-                className="rounded-xl border border-zinc-200 bg-white/60 px-4 py-2 text-sm text-zinc-900 transition hover:bg-white dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                className="rounded-sm border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
               >
                 Logout
               </button>
