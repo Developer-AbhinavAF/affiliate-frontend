@@ -37,13 +37,13 @@ export function SuperAdminPlatformControlsPage() {
     onError: () => push('Failed to save'),
   })
 
-  if (isLoading) return <div className="text-sm text-white/70">Loading…</div>
-  if (isError) return <div className="text-sm text-white/70">Failed to load settings</div>
+  if (isLoading) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
+  if (isError) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Failed to load settings</div>
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-      <div className="text-sm font-medium text-white">Platform Controls</div>
-      <div className="mt-1 text-sm text-white/60">Maintenance mode blocks non-superadmin APIs with a 503 response.</div>
+    <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+      <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Platform Controls</div>
+      <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Maintenance mode blocks non-superadmin APIs with a 503 response.</div>
 
       <div className="mt-5 flex items-center gap-3">
         <input
@@ -53,25 +53,25 @@ export function SuperAdminPlatformControlsPage() {
           onChange={(e) => setMaintenanceEnabled(e.target.checked)}
           className="h-4 w-4"
         />
-        <label htmlFor="mm" className="text-sm text-white/80">
+        <label htmlFor="mm" className="text-sm text-zinc-900 dark:text-zinc-100">
           Maintenance mode enabled
         </label>
       </div>
 
       <div className="mt-4">
-        <div className="text-sm text-white/70">Maintenance message</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">Maintenance message</div>
         <textarea
           value={maintenanceMessage}
           onChange={(e) => setMaintenanceMessage(e.target.value)}
           rows={3}
-          className="mt-2 w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white/90 outline-none"
+          className="mt-2 w-full rounded-xl border border-zinc-200 bg-white/70 px-4 py-3 text-sm text-zinc-900 outline-none focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:focus:border-zinc-700"
         />
       </div>
 
       <button
         disabled={save.isPending}
         onClick={() => save.mutate()}
-        className="mt-4 rounded-xl bg-gradient-to-r from-indigo-500 to-pink-500 px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+        className="mt-4 rounded-xl bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50 transition hover:bg-zinc-800 disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
       >
         {save.isPending ? 'Saving…' : 'Save'}
       </button>

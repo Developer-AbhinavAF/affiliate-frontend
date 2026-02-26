@@ -34,24 +34,24 @@ export function CategoryPage() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <div className="text-2xl font-semibold text-white">{meta.title}</div>
-        <div className="text-sm text-white/70">{meta.subtitle}</div>
+      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-6 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
+        <div className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">{meta.title}</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">{meta.subtitle}</div>
 
         <div className="mt-4">
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search products…"
-            className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white/90 outline-none placeholder:text-white/40 focus:border-white/20"
+            className="w-full rounded-xl border border-zinc-200 bg-white/70 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
           />
         </div>
       </div>
 
       {isLoading ? (
-        <div className="text-sm text-white/70">Loading…</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
       ) : isError ? (
-        <div className="text-sm text-white/70">Failed to load products</div>
+        <div className="text-sm text-zinc-600 dark:text-zinc-400">Failed to load products</div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.items.map((p) => (
