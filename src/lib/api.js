@@ -23,7 +23,6 @@ api.interceptors.response.use(
   (err) => {
     const status = err?.response?.status
     const url = err?.config?.baseURL ? `${err.config.baseURL}${err.config.url}` : err?.config?.url
-    // eslint-disable-next-line no-console
     console.error('API request failed', { status, url, data: err?.response?.data })
     return Promise.reject(err)
   }

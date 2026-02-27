@@ -22,8 +22,8 @@ export function SuperAdminDashboard() {
     },
   })
 
-  if (isLoading) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
-  if (isError) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Failed to load dashboard</div>
+  if (isLoading) return <div className="text-sm text-[hsl(var(--muted-fg))]">Loading…</div>
+  if (isError) return <div className="text-sm text-[hsl(var(--muted-fg))]">Failed to load dashboard</div>
 
   const k = data.kpis
   const series = data.monthly || []
@@ -37,12 +37,12 @@ export function SuperAdminDashboard() {
         <KpiCard label="Active Sellers" value={k.activeSellers} />
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Recent Orders</div>
+      <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 shadow-sm backdrop-blur">
+        <div className="text-sm font-medium text-[hsl(var(--fg))]">Recent Orders</div>
         {ordersQuery.isLoading ? (
-          <div className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
+          <div className="mt-4 text-sm text-[hsl(var(--muted-fg))]">Loading…</div>
         ) : ordersQuery.isError ? (
-          <div className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">Failed to load orders</div>
+          <div className="mt-4 text-sm text-[hsl(var(--muted-fg))]">Failed to load orders</div>
         ) : (
           <div className="mt-4">
             <RecentOrdersTable orders={ordersQuery.data || []} />
@@ -50,8 +50,8 @@ export function SuperAdminDashboard() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Monthly Revenue</div>
+      <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 shadow-sm backdrop-blur">
+        <div className="text-sm font-medium text-[hsl(var(--fg))]">Monthly Revenue</div>
         <div className="mt-4 h-72">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={series}>

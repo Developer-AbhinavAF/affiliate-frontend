@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../state/auth'
 import { useToast } from '../components/Toaster/Toaster'
 
 export function LoginPage() {
   const nav = useNavigate()
+  const location = useLocation()
   const { login } = useAuth()
   const { push } = useToast()
 
@@ -35,6 +36,12 @@ export function LoginPage() {
           />
         </div>
 
+        <div className="mt-2 text-right text-xs">
+          <Link to="/forgot-password" className="text-zinc-700 hover:underline dark:text-zinc-300">
+            Forgot password?
+          </Link>
+        </div>
+
         <button
           disabled={busy}
           onClick={async () => {
@@ -44,13 +51,21 @@ export function LoginPage() {
               const isEmail = input.includes('@')
               const u = await login(isEmail ? { email: input, password } : { username: input, password })
               push('Logged in')
-              const byRole = {
-                SUPER_ADMIN: '/superadmin',
-                ADMIN: '/admin',
-                SELLER: '/seller',
-                CUSTOMER: '/',
+
+              const params = new URLSearchParams(location.search)
+              const redirect = params.get('redirect')
+
+              if (redirect) {
+                nav(redirect, { replace: true })
+              } else {
+                const byRole = {
+                  SUPER_ADMIN: '/superadmin',
+                  ADMIN: '/admin',
+                  SELLER: '/seller',
+                  CUSTOMER: '/',
+                }
+                nav(byRole[u?.role] || '/', { replace: true })
               }
-              nav(byRole[u?.role] || '/')
             } catch (e) {
               push('Login failed')
             } finally {

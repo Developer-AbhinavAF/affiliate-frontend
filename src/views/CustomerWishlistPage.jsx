@@ -1,28 +1,37 @@
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
 
-import { api } from '../lib/api'
+import { useAuth } from '../state/auth'
 import { ProductCard } from '../ui/ProductCard'
 
 export function CustomerWishlistPage() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['customer', 'wishlist'],
-    queryFn: async () => {
-      const res = await api.get('/api/customer/wishlist')
-      return res.data.items || []
-    },
-  })
+  const { user } = useAuth()
+  const [items, setItems] = useState([])
 
-  if (isLoading) return <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
-  if (isError) return <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-zinc-600 dark:text-zinc-400">Failed to load wishlist</div>
+  const storageKey = useMemo(() => {
+    if (!user) return null
+    const id = user.id || user._id || user.email || user.username || 'guest'
+    return `wishlist_${id}`
+  }, [user])
+
+  useEffect(() => {
+    if (!storageKey) return
+    try {
+      const raw = localStorage.getItem(storageKey)
+      const parsed = raw ? JSON.parse(raw) : []
+      setItems(Array.isArray(parsed) ? parsed : [])
+    } catch {
+      setItems([])
+    }
+  }, [storageKey])
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
       <div className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Wishlist</div>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {(data || []).map((p) => (
-          <ProductCard key={p._id} product={p} />
+        {items.map((item) => (
+          <ProductCard key={item.product._id} product={item.product} />
         ))}
-        {(data || []).length === 0 ? <div className="text-sm text-zinc-600 dark:text-zinc-400">No items</div> : null}
+        {items.length === 0 ? <div className="text-sm text-zinc-600 dark:text-zinc-400">No items</div> : null}
       </div>
     </div>
   )

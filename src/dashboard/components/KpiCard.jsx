@@ -7,11 +7,11 @@ export function KpiCard({ label, value, sub }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="rounded-sm border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 p-5 shadow-sm backdrop-blur"
     >
-      <div className="text-xs uppercase tracking-wide text-zinc-600 dark:text-zinc-400">{label}</div>
-      <div className="mt-2 text-2xl font-semibold text-zinc-900 dark:text-zinc-50">{value}</div>
-      {sub ? <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{sub}</div> : null}
+      <div className="text-xs uppercase tracking-wide text-[hsl(var(--muted-fg))]">{label}</div>
+      <div className="mt-2 text-2xl font-semibold text-[hsl(var(--fg))]">{value}</div>
+      {sub ? <div className="mt-1 text-sm text-[hsl(var(--muted-fg))]">{sub}</div> : null}
     </motion.div>
   )
 }

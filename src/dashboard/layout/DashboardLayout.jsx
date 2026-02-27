@@ -9,10 +9,10 @@ function SidebarItem({ to, icon: Icon, label }) {
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center gap-3 rounded-sm px-3 py-2 text-sm transition ${
+        `flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition ${
           isActive
-            ? 'bg-zinc-900 text-zinc-50 dark:bg-zinc-50 dark:text-zinc-900'
-            : 'text-zinc-700 hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-zinc-50'
+            ? 'bg-black/8 text-[hsl(var(--fg))] dark:bg-white/12'
+            : 'text-[hsl(var(--muted-fg))] hover:bg-black/5 hover:text-[hsl(var(--fg))] dark:hover:bg-white/10'
         }`
       }
     >
@@ -61,7 +61,7 @@ export function DashboardLayout({ title }) {
   const { user, logout } = useAuth()
   const menu = menuByRole[user?.role] || []
 
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light')
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
 
   useEffect(() => {
     const root = document.documentElement
@@ -73,19 +73,19 @@ export function DashboardLayout({ title }) {
   const ThemeIcon = useMemo(() => (theme === 'dark' ? Sun : Moon), [theme])
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[hsl(var(--bg))]">
       <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
         <aside className="hidden w-64 shrink-0 md:block">
-          <div className="rounded-sm border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-3">
             <div className="flex items-center gap-2 px-2 py-2">
               <img
                 src="/Logo.jpeg"
                 alt="TrendKart"
-                className="h-9 w-9 rounded-sm border border-zinc-200 object-cover dark:border-zinc-800"
+                className="h-9 w-9 rounded-sm border border-zinc-200 object-cover dark:border-zinc-700"
               />
               <div className="leading-tight">
-                <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">TrendKart</div>
-                <div className="text-xs text-zinc-600 dark:text-zinc-400">{user?.role || ''}</div>
+                <div className="text-sm font-semibold text-[hsl(var(--fg))]">TrendKart</div>
+                <div className="text-xs text-[hsl(var(--muted-fg))]">{user?.role || ''}</div>
               </div>
             </div>
             <div className="mt-2 space-y-1">
@@ -99,21 +99,21 @@ export function DashboardLayout({ title }) {
         <div className="min-w-0 flex-1">
           <div className="mb-6 flex items-center justify-between gap-4">
             <div>
-              <div className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">{title}</div>
-              <div className="text-sm text-zinc-600 dark:text-zinc-400">Hi, {user?.name}</div>
+              <div className="text-2xl font-semibold text-[hsl(var(--fg))]">{title}</div>
+              <div className="text-sm text-[hsl(var(--muted-fg))]">Hi, {user?.name}</div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-                className="grid h-10 w-10 place-items-center rounded-sm border border-zinc-200 bg-white text-zinc-800 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
-                aria-label="Toggle dark mode"
+                className="grid h-10 w-10 place-items-center rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-zinc-700 transition hover:bg-black/5 hover:text-zinc-950 dark:text-white/90 dark:hover:bg-white/10 dark:hover:text-white"
+                aria-label="Toggle theme"
                 type="button"
               >
                 <ThemeIcon className="h-4 w-4" />
               </button>
               <button
                 onClick={logout}
-                className="rounded-sm border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
+                className="rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-2 text-sm text-[hsl(var(--fg))] transition hover:bg-black/5 dark:hover:bg-white/10"
               >
                 Logout
               </button>

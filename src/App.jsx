@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AuthProvider, useAuth } from './state/auth'
 import { DashboardLayout } from './dashboard/layout/DashboardLayout'
@@ -27,8 +27,10 @@ import { CategoryPage } from './views/CategoryPage'
 import { CustomerAccountPage } from './views/CustomerAccountPage'
 import { CustomerOrdersPage } from './views/CustomerOrdersPage'
 import { CustomerWishlistPage } from './views/CustomerWishlistPage'
+import { CustomerCartPage } from './views/CustomerCartPage'
 import { ProductPage } from './views/ProductPage'
 import { LoginPage } from './views/LoginPage'
+import { ForgotPasswordPage } from './views/ForgotPasswordPage'
 import { SellerLoginPage } from './views/SellerLoginPage'
 import { SignupPage } from './views/SignupPage'
 import { NotFoundPage } from './views/NotFoundPage'
@@ -46,9 +48,14 @@ function PlaceholderPage({ title }) {
 
 function RequireRole({ allowedRoles, loginPath }) {
   const { user, loading } = useAuth()
+  const location = useLocation()
 
   if (loading) return <div className="text-sm text-white/70">Loading…</div>
-  if (!user) return <Navigate to={loginPath || '/login'} replace />
+  if (!user) {
+    const redirect = encodeURIComponent(location.pathname + location.search)
+    const base = loginPath || '/login'
+    return <Navigate to={`${base}?redirect=${redirect}`} replace />
+  }
   if (allowedRoles?.length && !allowedRoles.includes(user.role)) {
     const byRole = {
       SUPER_ADMIN: '/superadmin',
@@ -69,9 +76,14 @@ function App() {
           <AppShell>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/category/:category" element={<CategoryPage />} />
-              <Route path="/product/:id" element={<ProductPage />} />
+
+              {/* Protect all product views for non-logged-in users */}
+              <Route element={<RequireRole loginPath="/login" />}>
+                <Route path="/category/:category" element={<CategoryPage />} />
+                <Route path="/product/:id" element={<ProductPage />} />
+              </Route>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/superadmin/login" element={<SuperAdminLoginPage />} />
               <Route path="/admin/login" element={<AdminLoginPage />} />
               <Route path="/seller/login" element={<SellerLoginPage />} />
@@ -112,7 +124,9 @@ function App() {
                 </Route>
               </Route>
 
-              <Route element={<RequireRole allowedRoles={['CUSTOMER']} loginPath="/login" />}>
+              {/* Account routes: require login (any role) */}
+              <Route element={<RequireRole loginPath="/login" />}>
+                <Route path="/cart" element={<CustomerCartPage />} />
                 <Route path="/orders" element={<CustomerOrdersPage />} />
                 <Route path="/wishlist" element={<CustomerWishlistPage />} />
                 <Route path="/account" element={<CustomerAccountPage />} />
