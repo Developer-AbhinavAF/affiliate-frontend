@@ -37,7 +37,7 @@ export function Toaster() {
   const toasts = useContext(ToastStateContext) || []
 
   return (
-    <div className="fixed right-4 top-4 z-50 flex w-[340px] flex-col gap-2">
+    <div className="fixed bottom-4 right-4 z-50 flex w-[340px] flex-col gap-2 max-sm:left-4 max-sm:right-4 max-sm:w-auto">
       {toasts.map((t) => (
         <div
           key={t.id}

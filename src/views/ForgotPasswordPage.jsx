@@ -16,8 +16,11 @@ export function ForgotPasswordPage() {
       await api.post('/api/auth/forgot-password', { emailOrUsername: identifier })
       push('OTP sent if account exists')
       setStep(2)
-    } catch {
-      push('Failed to send OTP')
+    } catch (err) {
+      const status = err?.response?.status
+      const msg = err?.response?.data?.message || err?.message
+      if (status === 404) push('OTP API not found (backend not updated)')
+      else push(msg ? `Failed to send OTP: ${msg}` : 'Failed to send OTP')
     } finally {
       setBusy(false)
     }
@@ -33,8 +36,9 @@ export function ForgotPasswordPage() {
       })
       push('Password reset')
       setStep(3)
-    } catch {
-      push('Failed to reset password')
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message
+      push(msg ? `Failed to reset password: ${msg}` : 'Failed to reset password')
     } finally {
       setBusy(false)
     }
