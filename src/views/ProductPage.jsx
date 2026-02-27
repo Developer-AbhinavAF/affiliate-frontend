@@ -106,7 +106,7 @@ function SpecsTable({ specs }) {
       <table className="w-full text-sm">
         <tbody>
           {entries.map(([k, v], idx) => (
-            <tr key={k} className={idx % 2 === 0 ? 'bg-black/[0.02] dark:bg-white/[0.03]' : ''}>
+            <tr key={k} className={idx % 2 === 0 ? 'bg-black/2 dark:bg-white/3' : ''}>
               <td className="w-[40%] px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{k}</td>
               <td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">{String(v)}</td>
             </tr>
