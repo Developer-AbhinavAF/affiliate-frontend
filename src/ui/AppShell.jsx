@@ -76,15 +76,34 @@ function TopNav() {
             <>
               <div className="hidden text-sm text-[hsl(var(--muted-fg))] sm:block">Hi, {user.name}</div>
 
-              {/* Panel/Account button is desktop-only (excluded from hamburger) */}
+              {/* Panel/Account button */}
               {panelLink ? (
-                <Link
-                  to={panelLink.to}
-                  className="hidden items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm font-medium text-zinc-50 shadow-sm transition hover:bg-zinc-800 hover:border-zinc-500 md:inline-flex"
-                >
-                  {panelLink.label === 'Account' ? <User className="h-4 w-4" /> : <LayoutDashboard className="h-4 w-4" />}
-                  {panelLink.label}
-                </Link>
+                <>
+                  {/* Desktop: full button */}
+                  <Link
+                    to={panelLink.to}
+                    className="hidden items-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm font-medium text-zinc-50 shadow-sm transition hover:bg-zinc-800 hover:border-zinc-500 md:inline-flex"
+                  >
+                    {panelLink.label === 'Account' ? (
+                      <User className="h-4 w-4" />
+                    ) : (
+                      <LayoutDashboard className="h-4 w-4" />
+                    )}
+                    {panelLink.label}
+                  </Link>
+                  {/* Mobile: icon-only circle, always visible on Android/phones */}
+                  <Link
+                    to={panelLink.to}
+                    className="grid h-9 w-9 place-items-center rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-50 shadow-sm transition hover:bg-zinc-800 hover:border-zinc-500 md:hidden"
+                    aria-label={panelLink.label}
+                  >
+                    {panelLink.label === 'Account' ? (
+                      <User className="h-4 w-4" />
+                    ) : (
+                      <LayoutDashboard className="h-4 w-4" />
+                    )}
+                  </Link>
+                </>
               ) : null}
 
               <button
