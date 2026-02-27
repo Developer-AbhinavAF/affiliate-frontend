@@ -5,8 +5,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../lib/api'
 import { useToast } from '../../components/Toaster/Toaster'
 
-const roles = ['', 'CUSTOMER', 'SELLER', 'ADMIN', 'SUPER_ADMIN']
-const settableRoles = ['CUSTOMER', 'SELLER', 'ADMIN']
+const roles = ['', 'CUSTOMER', 'ADMIN', 'SUPER_ADMIN']
+const settableRoles = ['CUSTOMER', 'ADMIN']
 
 export function SuperAdminUsersPage() {
   const qc = useQueryClient()

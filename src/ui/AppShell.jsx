@@ -24,7 +24,6 @@ function TopNav() {
     if (!user?.role) return null
     if (user.role === 'SUPER_ADMIN') return { to: '/superadmin', label: 'Panel' }
     if (user.role === 'ADMIN') return { to: '/admin', label: 'Panel' }
-    if (user.role === 'SELLER') return { to: '/seller', label: 'Panel' }
     if (user.role === 'CUSTOMER') return { to: '/account', label: 'Account' }
     return null
   }, [user?.role])
@@ -34,10 +33,8 @@ function TopNav() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/90 px-4 py-3 text-zinc-50 shadow-[0_18px_45px_rgba(0,0,0,0.7)]">
         <Link to="/" className="flex items-center gap-2">
           <img src="/Logo.jpeg" alt="TrendKart" className="h-9 w-9 rounded-sm border border-zinc-300 object-cover dark:border-zinc-700" />
-          <div className="hidden leading-tight sm:block">
-            <div className="leading-tight">
-              <div className="text-xl font-semibold text-zinc-50">TrendKart</div>
-            </div>
+          <div className="leading-tight">
+            <div className="text-xl font-semibold text-zinc-50">TrendKart</div>
           </div>
         </Link>
 

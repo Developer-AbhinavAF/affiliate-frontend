@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { BarChart3, Boxes, ClipboardList, FileText, Moon, Settings, Shield, ShoppingBag, Sun, Users } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { BarChart3, Boxes, ClipboardList, FileText, Settings, Shield, ShoppingBag, Users } from 'lucide-react'
+import { useState } from 'react'
 
 import { useAuth } from '../../state/auth'
 
@@ -27,28 +27,19 @@ const menuByRole = {
     { to: '/superadmin', icon: BarChart3, label: 'Dashboard' },
     { to: '/superadmin/users', icon: Users, label: 'User Management' },
     { to: '/superadmin/admins', icon: Shield, label: 'Manage Admins' },
-    { to: '/superadmin/sellers', icon: Users, label: 'Manage Sellers' },
     { to: '/superadmin/products', icon: Boxes, label: 'Manage Products' },
     { to: '/superadmin/orders', icon: ClipboardList, label: 'Orders' },
     { to: '/superadmin/commission', icon: Settings, label: 'Commission Settings' },
     { to: '/superadmin/advanced-analytics', icon: BarChart3, label: 'Advanced Analytics' },
     { to: '/superadmin/reports', icon: FileText, label: 'Reports' },
-    { to: '/superadmin/platform-controls', icon: Settings, label: 'Platform Controls' },
   ],
   ADMIN: [
     { to: '/admin', icon: BarChart3, label: 'Dashboard' },
-    { to: '/admin/sellers', icon: Users, label: 'Seller Management' },
     { to: '/admin/products', icon: Boxes, label: 'Product Approval' },
     { to: '/admin/orders', icon: ClipboardList, label: 'Orders' },
     { to: '/admin/reports', icon: FileText, label: 'Reports' },
   ],
-  SELLER: [
-    { to: '/seller', icon: BarChart3, label: 'Dashboard' },
-    { to: '/seller/products', icon: Boxes, label: 'My Products' },
-    { to: '/seller/orders', icon: ClipboardList, label: 'Orders' },
-    { to: '/seller/earnings', icon: BarChart3, label: 'Earnings' },
-    { to: '/seller/settings', icon: Settings, label: 'Profile Settings' },
-  ],
+  // SELLER role removed
   CUSTOMER: [
     { to: '/', icon: ShoppingBag, label: 'Store' },
     { to: '/orders', icon: ClipboardList, label: 'My Orders' },
@@ -60,17 +51,7 @@ const menuByRole = {
 export function DashboardLayout({ title }) {
   const { user, logout } = useAuth()
   const menu = menuByRole[user?.role] || []
-
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
-
-  useEffect(() => {
-    const root = document.documentElement
-    if (theme === 'dark') root.classList.add('dark')
-    else root.classList.remove('dark')
-    localStorage.setItem('theme', theme)
-  }, [theme])
-
-  const ThemeIcon = useMemo(() => (theme === 'dark' ? Sun : Moon), [theme])
+  const [dummy] = useState(false)
 
   return (
     <div className="min-h-screen bg-[hsl(var(--bg))]">
@@ -103,14 +84,6 @@ export function DashboardLayout({ title }) {
               <div className="text-sm text-[hsl(var(--muted-fg))]">Hi, {user?.name}</div>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
-                className="grid h-10 w-10 place-items-center rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] text-zinc-700 transition hover:bg-black/5 hover:text-zinc-950 dark:text-white/90 dark:hover:bg-white/10 dark:hover:text-white"
-                aria-label="Toggle theme"
-                type="button"
-              >
-                <ThemeIcon className="h-4 w-4" />
-              </button>
               <button
                 onClick={logout}
                 className="rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-2 text-sm text-[hsl(var(--fg))] transition hover:bg-black/5 dark:hover:bg-white/10"

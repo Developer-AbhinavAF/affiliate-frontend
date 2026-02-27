@@ -7,11 +7,7 @@ import { AppShell } from './ui/AppShell'
 import { AdminDashboard } from './dashboard/pages/AdminDashboard'
 import { AdminOrdersPage } from './dashboard/pages/AdminOrdersPage'
 import { AdminProductsPage } from './dashboard/pages/AdminProductsPage'
-import { AdminSellersPage } from './dashboard/pages/AdminSellersPage'
 import { ReportsPage } from './dashboard/pages/ReportsPage'
-import { SellerDashboard } from './dashboard/pages/SellerDashboard'
-import { SellerOrdersPage } from './dashboard/pages/SellerOrdersPage'
-import { SellerProductsPage } from './dashboard/pages/SellerProductsPage'
 import { SuperAdminDashboard } from './dashboard/pages/SuperAdminDashboard'
 import { SuperAdminAdminsPage } from './dashboard/pages/SuperAdminAdminsPage'
 import { SuperAdminCommissionPage } from './dashboard/pages/SuperAdminCommissionPage'
@@ -20,7 +16,6 @@ import { SuperAdminProductsPage } from './dashboard/pages/SuperAdminProductsPage
 import { SuperAdminSellersPage } from './dashboard/pages/SuperAdminSellersPage'
 import { SuperAdminUsersPage } from './dashboard/pages/SuperAdminUsersPage'
 import { SuperAdminAdvancedAnalyticsPage } from './dashboard/pages/SuperAdminAdvancedAnalyticsPage'
-import { SuperAdminPlatformControlsPage } from './dashboard/pages/SuperAdminPlatformControlsPage'
 import { HomePage } from './views/HomePage'
 import { AdminLoginPage } from './views/AdminLoginPage'
 import { CategoryPage } from './views/CategoryPage'
@@ -31,7 +26,6 @@ import { CustomerCartPage } from './views/CustomerCartPage'
 import { ProductPage } from './views/ProductPage'
 import { LoginPage } from './views/LoginPage'
 import { ForgotPasswordPage } from './views/ForgotPasswordPage'
-import { SellerLoginPage } from './views/SellerLoginPage'
 import { SignupPage } from './views/SignupPage'
 import { NotFoundPage } from './views/NotFoundPage'
 import { SuperAdminLoginPage } from './views/SuperAdminLoginPage'
@@ -60,7 +54,6 @@ function RequireRole({ allowedRoles, loginPath }) {
     const byRole = {
       SUPER_ADMIN: '/superadmin',
       ADMIN: '/admin',
-      SELLER: '/seller',
       CUSTOMER: '/',
     }
     return <Navigate to={byRole[user.role] || '/'} replace />
@@ -86,7 +79,6 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/superadmin/login" element={<SuperAdminLoginPage />} />
               <Route path="/admin/login" element={<AdminLoginPage />} />
-              <Route path="/seller/login" element={<SellerLoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
 
               <Route element={<RequireRole allowedRoles={['SUPER_ADMIN']} loginPath="/superadmin/login" />}>
@@ -94,35 +86,25 @@ function App() {
                   <Route path="/superadmin" element={<SuperAdminDashboard />} />
                   <Route path="/superadmin/users" element={<SuperAdminUsersPage />} />
                   <Route path="/superadmin/admins" element={<SuperAdminAdminsPage />} />
-                  <Route path="/superadmin/sellers" element={<SuperAdminSellersPage />} />
+                  {/* Seller management removed */}
                   <Route path="/superadmin/products" element={<SuperAdminProductsPage />} />
                   <Route path="/superadmin/orders" element={<SuperAdminOrdersPage />} />
                   <Route path="/superadmin/commission" element={<SuperAdminCommissionPage />} />
                   <Route path="/superadmin/advanced-analytics" element={<SuperAdminAdvancedAnalyticsPage />} />
                   <Route path="/superadmin/reports" element={<ReportsPage />} />
-                  <Route path="/superadmin/platform-controls" element={<SuperAdminPlatformControlsPage />} />
                 </Route>
               </Route>
 
               <Route element={<RequireRole allowedRoles={['ADMIN']} loginPath="/admin/login" />}>
                 <Route element={<DashboardLayout title="Admin Panel" />}>
                   <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin/sellers" element={<AdminSellersPage />} />
                   <Route path="/admin/products" element={<AdminProductsPage />} />
                   <Route path="/admin/orders" element={<AdminOrdersPage />} />
                   <Route path="/admin/reports" element={<ReportsPage />} />
                 </Route>
               </Route>
 
-              <Route element={<RequireRole allowedRoles={['SELLER']} loginPath="/seller/login" />}>
-                <Route element={<DashboardLayout title="Seller Panel" />}>
-                  <Route path="/seller" element={<SellerDashboard />} />
-                  <Route path="/seller/products" element={<SellerProductsPage />} />
-                  <Route path="/seller/orders" element={<SellerOrdersPage />} />
-                  <Route path="/seller/earnings" element={<PlaceholderPage title="Earnings (coming soon)" />} />
-                  <Route path="/seller/settings" element={<PlaceholderPage title="Profile Settings (coming soon)" />} />
-                </Route>
-              </Route>
+              {/* Seller panel removed */}
 
               {/* Account routes: require login (any role) */}
               <Route element={<RequireRole loginPath="/login" />}>

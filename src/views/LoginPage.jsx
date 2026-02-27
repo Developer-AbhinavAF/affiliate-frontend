@@ -61,7 +61,6 @@ export function LoginPage() {
                 const byRole = {
                   SUPER_ADMIN: '/superadmin',
                   ADMIN: '/admin',
-                  SELLER: '/seller',
                   CUSTOMER: '/',
                 }
                 nav(byRole[u?.role] || '/', { replace: true })
