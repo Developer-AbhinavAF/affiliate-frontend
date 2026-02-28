@@ -59,7 +59,7 @@ export function AdminProductsPage() {
             <thead className="text-zinc-600 dark:text-zinc-400">
               <tr>
                 <th className="py-2">Title</th>
-                <th className="py-2">Seller</th>
+                <th className="py-2">Created By</th>
                 <th className="py-2">Price</th>
                 <th className="py-2">Stock</th>
                 <th className="py-2">Status</th>
@@ -70,7 +70,7 @@ export function AdminProductsPage() {
               {rows.map((p) => (
                 <tr key={p._id} className="border-t border-zinc-200/70 dark:border-zinc-800">
                   <td className="py-2 text-zinc-900 dark:text-zinc-100">{p.title}</td>
-                  <td className="py-2 text-zinc-600 dark:text-zinc-400">{p.sellerId?.name || ''}</td>
+                  <td className="py-2 text-zinc-600 dark:text-zinc-400">{p.createdBy?.name || ''}</td>
                   <td className="py-2 text-zinc-900 dark:text-zinc-100">₹ {Math.round(p.price).toLocaleString()}</td>
                   <td className="py-2 text-zinc-900 dark:text-zinc-100">{p.stock}</td>
                   <td className="py-2 text-zinc-900 dark:text-zinc-100">{p.status}</td>

@@ -52,10 +52,10 @@ export function AdminDashboard() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Pending Sellers" value={k.pendingSellers} />
         <KpiCard label="Pending Products" value={k.pendingProducts} />
         <KpiCard label="Total Orders" value={k.totalOrders} />
         <KpiCard label="Shipped" value={k.ordersByStatus?.SHIPPED || 0} />
+        <KpiCard label="Delivered" value={k.ordersByStatus?.DELIVERED || 0} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

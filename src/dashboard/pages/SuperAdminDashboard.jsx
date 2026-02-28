@@ -34,7 +34,7 @@ export function SuperAdminDashboard() {
         <KpiCard label="Total Revenue" value={`₹ ${Math.round(k.totalRevenue).toLocaleString()}`} />
         <KpiCard label="Platform Earnings" value={`₹ ${Math.round(k.platformEarnings).toLocaleString()}`} />
         <KpiCard label="Total Orders" value={k.totalOrders} />
-        <KpiCard label="Active Sellers" value={k.activeSellers} />
+        <KpiCard label="Total Products" value={k.totalProducts} />
       </div>
 
       <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 shadow-sm backdrop-blur">

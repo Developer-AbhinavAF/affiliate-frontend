@@ -60,7 +60,7 @@ export function SuperAdminProductsPage() {
             <thead className="text-white/60">
               <tr>
                 <th className="py-2">Title</th>
-                <th className="py-2">Seller</th>
+                <th className="py-2">Created By</th>
                 <th className="py-2">Price</th>
                 <th className="py-2">Stock</th>
                 <th className="py-2">Status</th>
@@ -71,7 +71,7 @@ export function SuperAdminProductsPage() {
               {rows.map((p) => (
                 <tr key={p._id} className="border-t border-white/10">
                   <td className="py-2 text-white/80">{p.title}</td>
-                  <td className="py-2 text-white/70">{p.sellerId?.name || ''}</td>
+                  <td className="py-2 text-white/70">{p.createdBy?.name || ''}</td>
                   <td className="py-2 text-white/80">₹ {Math.round(p.price).toLocaleString()}</td>
                   <td className="py-2 text-white/80">{p.stock}</td>
                   <td className="py-2 text-white/80">{p.status}</td>

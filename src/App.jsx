@@ -7,15 +7,20 @@ import { AppShell } from './ui/AppShell'
 import { AdminDashboard } from './dashboard/pages/AdminDashboard'
 import { AdminOrdersPage } from './dashboard/pages/AdminOrdersPage'
 import { AdminProductsPage } from './dashboard/pages/AdminProductsPage'
+import { AdminAddProductPage } from './dashboard/pages/AdminAddProductPage'
+import { AdminEditProductPage } from './dashboard/pages/AdminEditProductPage'
+import { AdminManageProductsPage } from './dashboard/pages/AdminManageProductsPage'
 import { ReportsPage } from './dashboard/pages/ReportsPage'
 import { SuperAdminDashboard } from './dashboard/pages/SuperAdminDashboard'
 import { SuperAdminAdminsPage } from './dashboard/pages/SuperAdminAdminsPage'
 import { SuperAdminCommissionPage } from './dashboard/pages/SuperAdminCommissionPage'
 import { SuperAdminOrdersPage } from './dashboard/pages/SuperAdminOrdersPage'
 import { SuperAdminProductsPage } from './dashboard/pages/SuperAdminProductsPage'
-import { SuperAdminSellersPage } from './dashboard/pages/SuperAdminSellersPage'
 import { SuperAdminUsersPage } from './dashboard/pages/SuperAdminUsersPage'
 import { SuperAdminAdvancedAnalyticsPage } from './dashboard/pages/SuperAdminAdvancedAnalyticsPage'
+import { SuperAdminManageProductsPage } from './dashboard/pages/SuperAdminManageProductsPage'
+import { SuperAdminAddProductPage } from './dashboard/pages/SuperAdminAddProductPage'
+import { SuperAdminEditProductPage } from './dashboard/pages/SuperAdminEditProductPage'
 import { HomePage } from './views/HomePage'
 import { AdminLoginPage } from './views/AdminLoginPage'
 import { CategoryPage } from './views/CategoryPage'
@@ -86,8 +91,10 @@ function App() {
                   <Route path="/superadmin" element={<SuperAdminDashboard />} />
                   <Route path="/superadmin/users" element={<SuperAdminUsersPage />} />
                   <Route path="/superadmin/admins" element={<SuperAdminAdminsPage />} />
-                  {/* Seller management removed */}
                   <Route path="/superadmin/products" element={<SuperAdminProductsPage />} />
+                  <Route path="/superadmin/manage-products" element={<SuperAdminManageProductsPage />} />
+                  <Route path="/superadmin/products/new" element={<SuperAdminAddProductPage />} />
+                  <Route path="/superadmin/products/:id/edit" element={<SuperAdminEditProductPage />} />
                   <Route path="/superadmin/orders" element={<SuperAdminOrdersPage />} />
                   <Route path="/superadmin/commission" element={<SuperAdminCommissionPage />} />
                   <Route path="/superadmin/advanced-analytics" element={<SuperAdminAdvancedAnalyticsPage />} />
@@ -99,6 +106,9 @@ function App() {
                 <Route element={<DashboardLayout title="Admin Panel" />}>
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin/products" element={<AdminProductsPage />} />
+                  <Route path="/admin/manage-products" element={<AdminManageProductsPage />} />
+                  <Route path="/admin/products/new" element={<AdminAddProductPage />} />
+                  <Route path="/admin/products/:id/edit" element={<AdminEditProductPage />} />
                   <Route path="/admin/orders" element={<AdminOrdersPage />} />
                   <Route path="/admin/reports" element={<ReportsPage />} />
                 </Route>

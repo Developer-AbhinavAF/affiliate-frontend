@@ -91,7 +91,6 @@ export function SuperAdminUsersPage() {
                 <th className="py-2">Username</th>
                 <th className="py-2">Email</th>
                 <th className="py-2">Role</th>
-                <th className="py-2">Seller Status</th>
                 <th className="py-2">Disabled</th>
                 <th className="py-2">Actions</th>
               </tr>
@@ -103,7 +102,6 @@ export function SuperAdminUsersPage() {
                   <td className="py-2 text-zinc-600 dark:text-zinc-400">{u.username || ''}</td>
                   <td className="py-2 text-zinc-600 dark:text-zinc-400">{u.email}</td>
                   <td className="py-2 text-zinc-900 dark:text-zinc-100">{u.role}</td>
-                  <td className="py-2 text-zinc-600 dark:text-zinc-400">{u.sellerStatus || ''}</td>
                   <td className="py-2 text-zinc-900 dark:text-zinc-100">{u.disabled ? 'Yes' : 'No'}</td>
                   <td className="py-2">
                     <div className="flex flex-wrap gap-2">

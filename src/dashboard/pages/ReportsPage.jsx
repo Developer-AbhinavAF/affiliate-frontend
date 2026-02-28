@@ -23,12 +23,12 @@ export function ReportsPage() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="rounded-sm border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+      className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 shadow-sm backdrop-blur"
     >
-      <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Reports (CSV)</div>
-      <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Download CSV exports for operations and accounting.</div>
+      <div className="text-sm font-medium text-[hsl(var(--fg))]">Reports (CSV)</div>
+      <div className="mt-1 text-sm text-[hsl(var(--muted-fg))]">Download CSV exports for operations and accounting.</div>
 
-      <div className="mt-5 flex flex-wrap gap-3">
+      <div className="mt-5 grid gap-3 sm:grid-cols-2">
         <button
           onClick={async () => {
             try {
@@ -38,7 +38,7 @@ export function ReportsPage() {
               push('Download failed')
             }
           }}
-          className="rounded-sm border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
+          className="w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-3 text-sm text-[hsl(var(--fg))] hover:bg-black/5 dark:hover:bg-white/10"
         >
           Download Orders CSV
         </button>
@@ -52,23 +52,9 @@ export function ReportsPage() {
               push('Download failed')
             }
           }}
-          className="rounded-sm border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
+          className="w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-3 text-sm text-[hsl(var(--fg))] hover:bg-black/5 dark:hover:bg-white/10"
         >
           Download Products CSV
-        </button>
-
-        <button
-          onClick={async () => {
-            try {
-              await downloadCsv('/api/reports/sellers', 'sellers.csv')
-              push('Downloaded sellers.csv')
-            } catch {
-              push('Download failed')
-            }
-          }}
-          className="rounded-sm border border-zinc-200 bg-white px-4 py-2 text-sm text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
-        >
-          Download Sellers CSV
         </button>
       </div>
     </motion.div>

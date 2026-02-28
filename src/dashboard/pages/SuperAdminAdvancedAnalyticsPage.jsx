@@ -22,7 +22,7 @@ export function SuperAdminAdvancedAnalyticsPage() {
   })
 
   const categories = useMemo(() => data?.categories || [], [data])
-  const topSellers = useMemo(() => data?.topSellers || [], [data])
+  const topCreators = useMemo(() => data?.topCreators || [], [data])
   const topProducts = useMemo(() => data?.topProducts || [], [data])
 
   if (isLoading) return <div className="text-sm text-zinc-600 dark:text-zinc-400">Loading…</div>
@@ -87,29 +87,31 @@ export function SuperAdminAdvancedAnalyticsPage() {
       </div>
 
       <div className="rounded-2xl border border-zinc-200 bg-white/60 p-5 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Top Sellers (by Revenue)</div>
+        <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">Top Creators (by Revenue)</div>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[900px] text-left text-sm">
             <thead className="text-zinc-600 dark:text-zinc-400">
               <tr>
-                <th className="py-2">Seller</th>
+                <th className="py-2">User</th>
                 <th className="py-2">Email</th>
+                <th className="py-2">Role</th>
                 <th className="py-2">Items Sold</th>
                 <th className="py-2">Revenue</th>
               </tr>
             </thead>
             <tbody>
-              {topSellers.map((s) => (
-                <tr key={s.sellerId} className="border-t border-zinc-200/70 dark:border-zinc-800">
-                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{s.name}</td>
-                  <td className="py-2 text-zinc-600 dark:text-zinc-400">{s.email}</td>
-                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{s.items}</td>
-                  <td className="py-2 text-zinc-900 dark:text-zinc-100">₹ {Math.round(s.revenue).toLocaleString()}</td>
+              {topCreators.map((c) => (
+                <tr key={c.creatorId} className="border-t border-zinc-200/70 dark:border-zinc-800">
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{c.name}</td>
+                  <td className="py-2 text-zinc-600 dark:text-zinc-400">{c.email}</td>
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{c.role}</td>
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">{c.items}</td>
+                  <td className="py-2 text-zinc-900 dark:text-zinc-100">₹ {Math.round(c.revenue).toLocaleString()}</td>
                 </tr>
               ))}
-              {topSellers.length === 0 ? (
+              {topCreators.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-6 text-center text-zinc-600 dark:text-zinc-400">
+                  <td colSpan={5} className="py-6 text-center text-zinc-600 dark:text-zinc-400">
                     No data
                   </td>
                 </tr>

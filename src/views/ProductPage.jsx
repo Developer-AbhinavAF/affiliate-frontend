@@ -321,7 +321,7 @@ export function ProductPage() {
   const imageSafeIdx = clamp(activeImage, 0, Math.max(0, images.length - 1))
   const mainImage = images[imageSafeIdx]
 
-  const brand = p?.brand || p?.vendorName || p?.sellerName || p?.storeName || '—'
+  const brand = p?.brand || p?.vendorName || p?.storeName || '—'
   const rating = p?.rating ?? (Array.isArray(p?.reviews) && p.reviews.length ? p.reviews.reduce((a, r) => a + (Number(r.rating) || 0), 0) / p.reviews.length : 0)
   const totalReviews = p?.totalReviews ?? p?.totalRatings ?? p?.reviews?.length ?? 0
   const highlights = p?.highlights?.length ? p.highlights : extractHighlights(p?.description, 6)
