@@ -302,7 +302,7 @@ export function ProductForm({
           <div className="mt-4 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {existingImages.map((img) => (
               <div key={img.publicId} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-2">
-                <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                <div className="aspect-4/3 overflow-hidden rounded-lg">
                   <img src={img.url} alt="" className="h-full w-full max-w-full object-cover" />
                 </div>
                 <button
@@ -317,7 +317,7 @@ export function ProductForm({
 
             {previews.map((p) => (
               <div key={p.url} className="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-2">
-                <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                <div className="aspect-4/3 overflow-hidden rounded-lg">
                   <img src={p.url} alt={p.name} className="h-full w-full max-w-full object-cover" />
                 </div>
                 <div className="mt-2 truncate text-xs text-[hsl(var(--muted-fg))]">{p.name}</div>
