@@ -1,7 +1,14 @@
 const IMGBB_ENDPOINT = 'https://api.imgbb.com/1/upload'
 
 function getImgBBApiKey() {
-  const viteKey = import.meta?.env?.VITE_IMGBB_API_KEY
+  let viteKey
+  try {
+    // Avoid optional chaining here: Vite statically replaces `import.meta.env.*`.
+    viteKey = import.meta.env.VITE_IMGBB_API_KEY
+  } catch {
+    viteKey = undefined
+  }
+
   const craKey = typeof process !== 'undefined' ? process?.env?.REACT_APP_IMGBB_API_KEY : undefined
   const key = String(viteKey || craKey || '').trim()
 

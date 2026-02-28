@@ -303,6 +303,8 @@ export function ProductPage() {
   const [activeImage, setActiveImage] = useState(0)
   const [tab, setTab] = useState('description')
   const [wish, setWish] = useState(false)
+  const [question, setQuestion] = useState('')
+  const [questionBusy, setQuestionBusy] = useState(false)
   const mainRef = useRef(null)
   const pointerStart = useRef(null)
 
@@ -354,6 +356,29 @@ export function ProductPage() {
     ],
     []
   )
+
+  async function submitQuestion() {
+    const msg = String(question || '').trim()
+    if (!msg) return
+    try {
+      setQuestionBusy(true)
+      await api.post('/api/support/questions', {
+        name: user?.name || '',
+        email: user?.email || '',
+        message: msg,
+        productId: p?._id || id,
+        productTitle: p?.title || '',
+        pageUrl: window.location.href,
+      })
+      setQuestion('')
+      push('Your question has been sent')
+    } catch (err) {
+      const m = err?.response?.data?.message || 'Failed to send your question'
+      push(m)
+    } finally {
+      setQuestionBusy(false)
+    }
+  }
 
   const userKey = useMemo(() => {
     if (!user) return null
@@ -660,6 +685,30 @@ export function ProductPage() {
                 </ul>
               </div>
             ) : null}
+
+            <div className="mt-5 rounded-3xl border border-zinc-200 bg-white/70 p-5 dark:border-zinc-800 dark:bg-zinc-950/30">
+              <div className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Q&amp;A</div>
+              <div className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">Ask a question about this product. We’ll respond via email.</div>
+
+              <div className="mt-4 space-y-3">
+                <textarea
+                  rows={3}
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  placeholder="Type your question…"
+                  className="w-full resize-none rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+                />
+
+                <button
+                  type="button"
+                  disabled={questionBusy || !String(question || '').trim()}
+                  onClick={submitQuestion}
+                  className="w-full rounded-2xl bg-zinc-900 px-4 py-3 text-sm font-medium text-zinc-50 transition hover:bg-zinc-800 disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                >
+                  {questionBusy ? 'Sending…' : 'Send question'}
+                </button>
+              </div>
+            </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <motion.button

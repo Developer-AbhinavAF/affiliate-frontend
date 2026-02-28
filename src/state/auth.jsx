@@ -47,6 +47,19 @@ export function AuthProvider({ children }) {
     setUser(data.user)
   }
 
+  async function requestSignupOtp({ name, email, password }) {
+    const { data } = await api.post('/api/auth/signup/request-otp', { name, email, password })
+    return data
+  }
+
+  async function verifySignupOtp({ email, code }) {
+    const { data } = await api.post('/api/auth/signup/verify-otp', { email, code })
+    localStorage.setItem('token', data.token)
+    setToken(data.token)
+    setUser(data.user)
+    return data.user
+  }
+
   function logout() {
     localStorage.removeItem('token')
     setToken(null)
@@ -54,7 +67,7 @@ export function AuthProvider({ children }) {
   }
 
   const value = useMemo(
-    () => ({ token, user, loading, login, signup, logout }),
+    () => ({ token, user, loading, login, signup, requestSignupOtp, verifySignupOtp, logout }),
     [token, user, loading]
   )
 

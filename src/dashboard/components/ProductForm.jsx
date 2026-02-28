@@ -5,6 +5,7 @@ import { useToast } from '../../components/Toaster/Toaster'
 import { uploadImages } from '../../utils/uploadImage'
 
 const CATEGORIES = ['electrical', 'supplements', 'clothes_men', 'clothes_women', 'clothes_kids']
+const SOURCE_COMPANIES = ['Custom', 'Amazon', 'Flipkart', 'Myntra', 'Ajio', 'Shopsy', 'Puma', 'Acer', 'MuscleBlaze', 'Nutrabay', 'HP']
 
 function normalizeTags(input) {
   return input
@@ -39,9 +40,17 @@ export function ProductForm({
     title: initial?.title || '',
     description: initial?.description || '',
     category: initial?.category || CATEGORIES[0],
+    brand: initial?.brand || '',
+    sourceCompany: initial?.sourceCompany || 'Custom',
     price: initial?.price ?? '',
     originalPrice: initial?.originalPrice ?? '',
     buyLink: initial?.buyLink || '',
+    ratingAvg: initial?.ratingAvg ?? '',
+    ratingCount: initial?.ratingCount ?? '',
+    bankOffer: Boolean(initial?.bankOffer),
+    exchangeOffer: Boolean(initial?.exchangeOffer),
+    emiAvailable: Boolean(initial?.emiAvailable),
+    partnerCoupon: Boolean(initial?.partnerCoupon),
     stock: initial?.stock ?? 0,
     sku: initial?.sku || '',
     shippingCost: initial?.shippingCost ?? 0,
@@ -60,9 +69,17 @@ export function ProductForm({
       title: initial?.title || '',
       description: initial?.description || '',
       category: initial?.category || CATEGORIES[0],
+      brand: initial?.brand || '',
+      sourceCompany: initial?.sourceCompany || 'Custom',
       price: initial?.price ?? '',
       originalPrice: initial?.originalPrice ?? '',
       buyLink: initial?.buyLink || '',
+      ratingAvg: initial?.ratingAvg ?? '',
+      ratingCount: initial?.ratingCount ?? '',
+      bankOffer: Boolean(initial?.bankOffer),
+      exchangeOffer: Boolean(initial?.exchangeOffer),
+      emiAvailable: Boolean(initial?.emiAvailable),
+      partnerCoupon: Boolean(initial?.partnerCoupon),
       stock: initial?.stock ?? 0,
       sku: initial?.sku || '',
       shippingCost: initial?.shippingCost ?? 0,
@@ -178,9 +195,17 @@ export function ProductForm({
         title: values.title.trim(),
         description: values.description.trim(),
         category: values.category,
+        brand: values.brand.trim(),
+        sourceCompany: values.sourceCompany,
         price: Number(values.price),
         originalPrice: values.originalPrice === '' ? 0 : Number(values.originalPrice),
         buyLink: values.buyLink.trim(),
+        ratingAvg: values.ratingAvg === '' ? 0 : Number(values.ratingAvg),
+        ratingCount: values.ratingCount === '' ? 0 : Number(values.ratingCount),
+        bankOffer: Boolean(values.bankOffer),
+        exchangeOffer: Boolean(values.exchangeOffer),
+        emiAvailable: Boolean(values.emiAvailable),
+        partnerCoupon: Boolean(values.partnerCoupon),
         stock: Number(values.stock),
         sku: values.sku.trim(),
         shippingCost: Number(values.shippingCost),
@@ -248,6 +273,31 @@ export function ProductForm({
           {errors.category ? <div className="mt-1 text-xs text-red-500">{errors.category}</div> : null}
         </div>
 
+        <div>
+          <div className="text-sm font-medium text-[hsl(var(--fg))]">Brand</div>
+          <input
+            value={values.brand}
+            onChange={(e) => setValues((v) => ({ ...v, brand: e.target.value }))}
+            className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+            placeholder="Brand name"
+          />
+        </div>
+
+        <div>
+          <div className="text-sm font-medium text-[hsl(var(--fg))]">Marketplace</div>
+          <select
+            value={values.sourceCompany}
+            onChange={(e) => setValues((v) => ({ ...v, sourceCompany: e.target.value }))}
+            className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none focus:border-black/20 dark:focus:border-white/20"
+          >
+            {SOURCE_COMPANIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="lg:col-span-2">
           <div className="text-sm font-medium text-[hsl(var(--fg))]">Description</div>
           <textarea
@@ -312,6 +362,52 @@ export function ProductForm({
             className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none focus:border-black/20 dark:focus:border-white/20"
           />
           {errors.shippingCost ? <div className="mt-1 text-xs text-red-500">{errors.shippingCost}</div> : null}
+        </div>
+
+        <div>
+          <div className="text-sm font-medium text-[hsl(var(--fg))]">Rating (avg)</div>
+          <input
+            value={values.ratingAvg}
+            onChange={(e) => setValues((v) => ({ ...v, ratingAvg: e.target.value }))}
+            type="number"
+            min="0"
+            max="5"
+            step="0.1"
+            className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none focus:border-black/20 dark:focus:border-white/20"
+          />
+        </div>
+
+        <div>
+          <div className="text-sm font-medium text-[hsl(var(--fg))]">Rating count</div>
+          <input
+            value={values.ratingCount}
+            onChange={(e) => setValues((v) => ({ ...v, ratingCount: e.target.value }))}
+            type="number"
+            min="0"
+            step="1"
+            className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none focus:border-black/20 dark:focus:border-white/20"
+          />
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-4 backdrop-blur">
+        <div className="text-sm font-medium text-[hsl(var(--fg))]">Offers</div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { key: 'bankOffer', label: 'Bank offer' },
+            { key: 'exchangeOffer', label: 'Exchange offer' },
+            { key: 'emiAvailable', label: 'EMI available' },
+            { key: 'partnerCoupon', label: 'Partner coupon' },
+          ].map((it) => (
+            <label key={it.key} className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-2 text-sm text-[hsl(var(--fg))]">
+              <input
+                type="checkbox"
+                checked={Boolean(values[it.key])}
+                onChange={(e) => setValues((v) => ({ ...v, [it.key]: e.target.checked }))}
+              />
+              {it.label}
+            </label>
+          ))}
         </div>
       </div>
 

@@ -17,10 +17,35 @@ const titles = {
 export function CategoryPage() {
   const { category } = useParams()
   const [q, setQ] = useState('')
+  const [brand, setBrand] = useState('')
+  const [sourceCompany, setSourceCompany] = useState('')
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const [minRating, setMinRating] = useState('')
+  const [bankOffer, setBankOffer] = useState(false)
+  const [exchangeOffer, setExchangeOffer] = useState(false)
+  const [emiAvailable, setEmiAvailable] = useState(false)
+  const [partnerCoupon, setPartnerCoupon] = useState(false)
 
   const meta = titles[category] || { title: 'Products', subtitle: '' }
 
-  const queryKey = useMemo(() => ['products', category, q], [category, q])
+  const queryKey = useMemo(
+    () => [
+      'products',
+      category,
+      q,
+      brand,
+      sourceCompany,
+      minPrice,
+      maxPrice,
+      minRating,
+      bankOffer,
+      exchangeOffer,
+      emiAvailable,
+      partnerCoupon,
+    ],
+    [category, q, brand, sourceCompany, minPrice, maxPrice, minRating, bankOffer, exchangeOffer, emiAvailable, partnerCoupon]
+  )
 
   const { data, isLoading, isError } = useQuery({
     queryKey,
@@ -28,7 +53,21 @@ export function CategoryPage() {
       const res = await api.get('/api/products', {
         // Backend only allows limit <= 50
         // 4 columns × 7 rows (28) still fits comfortably within this
-        params: { category, q: q || undefined, limit: 50, page: 1 },
+        params: {
+          category,
+          q: q || undefined,
+          brand: brand || undefined,
+          sourceCompany: sourceCompany || undefined,
+          minPrice: minPrice === '' ? undefined : Number(minPrice),
+          maxPrice: maxPrice === '' ? undefined : Number(maxPrice),
+          minRating: minRating === '' ? undefined : Number(minRating),
+          bankOffer: bankOffer ? true : undefined,
+          exchangeOffer: exchangeOffer ? true : undefined,
+          emiAvailable: emiAvailable ? true : undefined,
+          partnerCoupon: partnerCoupon ? true : undefined,
+          limit: 50,
+          page: 1,
+        },
       })
       return res.data
     },
@@ -44,7 +83,7 @@ export function CategoryPage() {
 
   useEffect(() => {
     setPage(1)
-  }, [category, q])
+  }, [category, q, brand, sourceCompany, minPrice, maxPrice, minRating, bankOffer, exchangeOffer, emiAvailable, partnerCoupon])
 
   const totalPages = Math.max(1, Math.ceil(items.length / perPage))
   const pageSafe = Math.min(page, totalPages)
@@ -93,6 +132,82 @@ export function CategoryPage() {
             placeholder="Search products…"
             className="w-full rounded-xl border border-zinc-200 bg-white/90 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 shadow-[0_10px_30px_rgba(15,23,42,0.06)] focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
           />
+        </div>
+
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <input
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            placeholder="Brand (optional)"
+            className="w-full rounded-xl border border-zinc-200 bg-white/90 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 shadow-[0_10px_30px_rgba(15,23,42,0.06)] focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+          />
+
+          <select
+            value={sourceCompany}
+            onChange={(e) => setSourceCompany(e.target.value)}
+            className="w-full rounded-xl border border-zinc-200 bg-white/90 px-4 py-3 text-sm text-zinc-900 outline-none shadow-[0_10px_30px_rgba(15,23,42,0.06)] focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-100 dark:focus:border-zinc-700"
+          >
+            <option value="">All marketplaces</option>
+            <option value="Amazon">Amazon</option>
+            <option value="Flipkart">Flipkart</option>
+            <option value="Myntra">Myntra</option>
+            <option value="Ajio">Ajio</option>
+            <option value="Shopsy">Shopsy</option>
+            <option value="Puma">Puma</option>
+            <option value="Acer">Acer</option>
+            <option value="MuscleBlaze">MuscleBlaze</option>
+            <option value="Nutrabay">Nutrabay</option>
+            <option value="HP">HP</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
+          <input
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Min price"
+            className="w-full rounded-xl border border-zinc-200 bg-white/90 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 shadow-[0_10px_30px_rgba(15,23,42,0.06)] focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+          />
+          <input
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Max price"
+            className="w-full rounded-xl border border-zinc-200 bg-white/90 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 shadow-[0_10px_30px_rgba(15,23,42,0.06)] focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+          />
+          <input
+            value={minRating}
+            onChange={(e) => setMinRating(e.target.value)}
+            type="number"
+            min="0"
+            max="5"
+            step="0.1"
+            placeholder="Min rating"
+            className="w-full rounded-xl border border-zinc-200 bg-white/90 px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 shadow-[0_10px_30px_rgba(15,23,42,0.06)] focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
+          />
+        </div>
+
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[ 
+            { key: 'bankOffer', label: 'Bank offer', value: bankOffer, setter: setBankOffer },
+            { key: 'exchangeOffer', label: 'Exchange offer', value: exchangeOffer, setter: setExchangeOffer },
+            { key: 'emiAvailable', label: 'EMI available', value: emiAvailable, setter: setEmiAvailable },
+            { key: 'partnerCoupon', label: 'Partner coupon', value: partnerCoupon, setter: setPartnerCoupon },
+          ].map((it) => (
+            <label
+              key={it.key}
+              className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-white/90 px-3 py-2 text-sm text-zinc-800 shadow-[0_10px_30px_rgba(15,23,42,0.06)] dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-200"
+            >
+              <input type="checkbox" checked={it.value} onChange={(e) => it.setter(e.target.checked)} />
+              {it.label}
+            </label>
+          ))}
         </div>
       </motion.div>
 

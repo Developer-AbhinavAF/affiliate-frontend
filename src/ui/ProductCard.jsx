@@ -26,6 +26,23 @@ export function ProductCardSkeleton() {
 
 export function ProductCard({ product }) {
   const buyUrl = product?.buyLink || product?.affiliateUrl || ''
+  const imageUrl = (() => {
+    if (product?.imageUrl) return product.imageUrl
+    if (Array.isArray(product?.images) && product.images.length) {
+      const first = product.images.find(Boolean)
+      if (typeof first === 'string') return first
+      if (first?.url) return first.url
+    }
+    return ''
+  })()
+
+  const source = product?.sourceCompany || (Array.isArray(product?.tags) ? product.tags.find((t) => /amazon|flipkart/i.test(String(t))) : '')
+  const sourceLabel = (() => {
+    const s = String(source || '').toLowerCase()
+    if (s.includes('flipkart')) return 'Flipkart'
+    if (s.includes('amazon')) return 'Amazon'
+    return ''
+  })()
 
   return (
     <div style={{ perspective: 1500 }}>
@@ -40,11 +57,16 @@ export function ProductCard({ product }) {
         <div className="relative aspect-4/3 overflow-hidden">
           <img
             alt={product.title}
-            src={product.imageUrl}
+            src={imageUrl || undefined}
             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.06]"
             loading="lazy"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/55 via-black/10 to-transparent" />
+          {sourceLabel ? (
+            <div className="absolute right-3 top-3 rounded-full border border-white/30 bg-white/20 px-2 py-1 text-xs text-white backdrop-blur">
+              {sourceLabel} ✅
+            </div>
+          ) : null}
           <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-2 py-1 text-xs text-white backdrop-blur">
             <Star className="h-3.5 w-3.5 text-amber-300" />
             {product.rating?.toFixed?.(1) ?? '4.6'}
