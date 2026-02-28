@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { api } from '../../lib/api'
 import { useToast } from '../../components/Toaster/Toaster'
+import { uploadImages } from '../../utils/uploadImage'
 
 const CATEGORIES = ['electrical', 'supplements', 'clothes_men', 'clothes_women', 'clothes_kids']
 
@@ -129,23 +130,22 @@ export function ProductForm({
     const prepared = await Promise.all(newFiles.map((f) => compressImageFile(f)))
     setProgress({ phase: 'Uploading images…', pct: 20 })
 
-    const fd = new FormData()
-    prepared.forEach((f) => fd.append('images', f))
+    try {
+      const urls = await uploadImages(prepared, {
+        limit: 5,
+        onProgress: ({ index, total }) => {
+          const ratio = total ? Math.min(1, Math.max(0, index / total)) : 0
+          const pct = 20 + Math.round(ratio * 60)
+          setProgress((p) => (p.pct >= pct ? p : { phase: 'Uploading images…', pct }))
+        },
+      })
 
-    const res = await api.post(uploadEndpoint, fd, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      onUploadProgress: (evt) => {
-        const total = evt.total || 0
-        if (!total) return
-        const ratio = Math.min(1, Math.max(0, evt.loaded / total))
-        const pct = 20 + Math.round(ratio * 60)
-        setProgress((p) => (p.pct >= pct ? p : { phase: 'Uploading images…', pct }))
-      },
-    })
-
-    setProgress({ phase: 'Upload complete', pct: 82 })
-
-    return res.data.images || []
+      setProgress({ phase: 'Upload complete', pct: 82 })
+      return urls.map((url) => ({ url, publicId: url }))
+    } catch (e) {
+      setProgress({ phase: 'Upload failed', pct: 0 })
+      throw e
+    }
   }
 
   async function handleSubmit(e) {
@@ -155,6 +155,16 @@ export function ProductForm({
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length) {
       push('Please fix the form errors')
+      return
+    }
+
+    const totalImages = (existingImages?.length || 0) + (newFiles?.length || 0)
+    if (totalImages > 5) {
+      push('Maximum 5 images allowed')
+      return
+    }
+    if (mode !== 'edit' && totalImages < 1) {
+      push('Please select at least 1 image')
       return
     }
 
@@ -192,8 +202,16 @@ export function ProductForm({
       push('Product created')
       onSuccess?.(res.data.item)
     } catch (err) {
-      const msg = err?.response?.data?.message || 'Failed to save product'
-      push(msg)
+      const status = err?.response?.status
+      const backendMsg = err?.response?.data?.message
+      const msg = backendMsg || err?.message || 'Failed to save product'
+      // eslint-disable-next-line no-console
+      console.error('Product save failed', {
+        status,
+        message: msg,
+        data: err?.response?.data,
+      })
+      push(status ? `${msg} (HTTP ${status})` : msg)
     } finally {
       setBusy(false)
       setTimeout(() => setProgress({ phase: '', pct: 0 }), 700)
@@ -347,7 +365,7 @@ export function ProductForm({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="text-sm font-medium text-[hsl(var(--fg))]">Images</div>
-            <div className="text-xs text-[hsl(var(--muted-fg))]">Upload up to 8 images. You can preview before upload.</div>
+            <div className="text-xs text-[hsl(var(--muted-fg))]">Upload up to 5 images. You can preview before upload.</div>
           </div>
 
           <label className="inline-flex w-full cursor-pointer items-center justify-center rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-2 text-sm text-[hsl(var(--fg))] transition hover:bg-black/5 dark:hover:bg-white/10 sm:w-auto">
@@ -358,7 +376,13 @@ export function ProductForm({
               className="hidden"
               onChange={(e) => {
                 const files = Array.from(e.target.files || [])
-                setNewFiles(files.slice(0, 8))
+                const remaining = Math.max(0, 5 - (existingImages?.length || 0))
+                if (remaining <= 0) {
+                  push('Maximum 5 images already selected')
+                  setNewFiles([])
+                  return
+                }
+                setNewFiles(files.slice(0, remaining))
               }}
             />
             Choose files
