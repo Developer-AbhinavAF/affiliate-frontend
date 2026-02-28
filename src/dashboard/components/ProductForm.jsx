@@ -40,6 +40,7 @@ export function ProductForm({
     category: initial?.category || CATEGORIES[0],
     price: initial?.price ?? '',
     originalPrice: initial?.originalPrice ?? '',
+    buyLink: initial?.buyLink || '',
     stock: initial?.stock ?? 0,
     sku: initial?.sku || '',
     shippingCost: initial?.shippingCost ?? 0,
@@ -50,6 +51,7 @@ export function ProductForm({
   const [existingImages, setExistingImages] = useState(() => initial?.images || [])
   const [newFiles, setNewFiles] = useState([])
   const [busy, setBusy] = useState(false)
+  const [progress, setProgress] = useState({ phase: '', pct: 0 })
   const [errors, setErrors] = useState({})
 
   useEffect(() => {
@@ -59,6 +61,7 @@ export function ProductForm({
       category: initial?.category || CATEGORIES[0],
       price: initial?.price ?? '',
       originalPrice: initial?.originalPrice ?? '',
+      buyLink: initial?.buyLink || '',
       stock: initial?.stock ?? 0,
       sku: initial?.sku || '',
       shippingCost: initial?.shippingCost ?? 0,
@@ -84,15 +87,63 @@ export function ProductForm({
     }
   }, [previews])
 
+  async function compressImageFile(file) {
+    try {
+      const maxDim = 1000
+      const mime = file.type || ''
+      if (!mime.startsWith('image/')) return file
+
+      if (file.size <= 300 * 1024) return file
+
+      const bitmap = await createImageBitmap(file)
+      if (bitmap.width <= maxDim && bitmap.height <= maxDim && file.size <= 750 * 1024) return file
+
+      const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height))
+      const w = Math.max(1, Math.round(bitmap.width * scale))
+      const h = Math.max(1, Math.round(bitmap.height * scale))
+
+      const canvas = document.createElement('canvas')
+      canvas.width = w
+      canvas.height = h
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return file
+      ctx.drawImage(bitmap, 0, 0, w, h)
+
+      const outType = 'image/webp'
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob((b) => resolve(b), outType, 0.72)
+      })
+      if (!blob) return file
+
+      const name = file.name.replace(/\.[^.]+$/, '') + '.webp'
+      return new File([blob], name, { type: outType })
+    } catch {
+      return file
+    }
+  }
+
   async function uploadImagesIfNeeded() {
     if (!newFiles.length) return []
 
+    setProgress({ phase: 'Preparing images…', pct: 8 })
+    const prepared = await Promise.all(newFiles.map((f) => compressImageFile(f)))
+    setProgress({ phase: 'Uploading images…', pct: 20 })
+
     const fd = new FormData()
-    newFiles.forEach((f) => fd.append('images', f))
+    prepared.forEach((f) => fd.append('images', f))
 
     const res = await api.post(uploadEndpoint, fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (evt) => {
+        const total = evt.total || 0
+        if (!total) return
+        const ratio = Math.min(1, Math.max(0, evt.loaded / total))
+        const pct = 20 + Math.round(ratio * 60)
+        setProgress((p) => (p.pct >= pct ? p : { phase: 'Uploading images…', pct }))
+      },
     })
+
+    setProgress({ phase: 'Upload complete', pct: 82 })
 
     return res.data.images || []
   }
@@ -109,14 +160,17 @@ export function ProductForm({
 
     try {
       setBusy(true)
+      setProgress({ phase: 'Starting…', pct: 2 })
       const uploaded = await uploadImagesIfNeeded()
 
+      setProgress({ phase: mode === 'edit' ? 'Updating product…' : 'Creating product…', pct: 90 })
       const payload = {
         title: values.title.trim(),
         description: values.description.trim(),
         category: values.category,
         price: Number(values.price),
         originalPrice: values.originalPrice === '' ? 0 : Number(values.originalPrice),
+        buyLink: values.buyLink.trim(),
         stock: Number(values.stock),
         sku: values.sku.trim(),
         shippingCost: Number(values.shippingCost),
@@ -127,12 +181,14 @@ export function ProductForm({
 
       if (mode === 'edit') {
         const res = await api.put(`/api/products/${initial._id}`, payload)
+        setProgress({ phase: 'Done', pct: 100 })
         push('Product updated')
         onSuccess?.(res.data.item)
         return
       }
 
       const res = await api.post('/api/products', payload)
+      setProgress({ phase: 'Done', pct: 100 })
       push('Product created')
       onSuccess?.(res.data.item)
     } catch (err) {
@@ -140,6 +196,7 @@ export function ProductForm({
       push(msg)
     } finally {
       setBusy(false)
+      setTimeout(() => setProgress({ phase: '', pct: 0 }), 700)
     }
   }
 
@@ -252,6 +309,16 @@ export function ProductForm({
         </div>
 
         <div>
+          <div className="text-sm font-medium text-[hsl(var(--fg))]">Affiliate Link</div>
+          <input
+            value={values.buyLink}
+            onChange={(e) => setValues((v) => ({ ...v, buyLink: e.target.value }))}
+            className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+            placeholder="https://..."
+          />
+        </div>
+
+        <div>
           <div className="text-sm font-medium text-[hsl(var(--fg))]">Status</div>
           <select
             value={values.status}
@@ -330,6 +397,21 @@ export function ProductForm({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
+        {busy ? (
+          <div className="w-full sm:mr-auto sm:max-w-md">
+            <div className="mb-2 flex items-center justify-between text-xs text-[hsl(var(--muted-fg))]">
+              <div className="truncate pr-2">{progress.phase || 'Working…'}</div>
+              <div className="tabular-nums">{Math.min(100, Math.max(0, progress.pct))}%</div>
+            </div>
+            <div className="h-2 w-full overflow-hidden rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--card))]">
+              <div
+                className="h-full rounded-full bg-[hsl(var(--fg))] transition-[width] duration-200 ease-out"
+                style={{ width: `${Math.min(100, Math.max(2, progress.pct || 2))}%` }}
+              />
+            </div>
+          </div>
+        ) : null}
+
         {onCancel ? (
           <button
             type="button"

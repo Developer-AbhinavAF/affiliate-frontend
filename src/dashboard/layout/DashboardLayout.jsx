@@ -66,7 +66,7 @@ export function DashboardLayout({ title }) {
 
   return (
     <div className="min-h-screen bg-[hsl(var(--bg))]">
-      <div className="sticky top-0 z-40 border-b border-[hsl(var(--border))] bg-[hsl(var(--bg))]/85 backdrop-blur">
+      <div className="sticky top-20 z-40 rounded-3xl border-b border-[hsl(var(--border))] bg-[hsl(var(--bg))]/85 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
           <div className="flex items-center gap-3">
             <button

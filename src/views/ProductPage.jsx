@@ -423,11 +423,12 @@ export function ProductPage() {
   }
 
   const handleBuyNow = () => {
-    if (!p.affiliateUrl) {
+    const buyUrl = p?.buyLink || p?.affiliateUrl || ''
+    if (!buyUrl) {
       push('No store link available')
       return
     }
-    window.open(p.affiliateUrl, '_blank', 'noreferrer')
+    window.open(buyUrl, '_blank', 'noreferrer')
   }
 
   const onPointerDown = (e) => {

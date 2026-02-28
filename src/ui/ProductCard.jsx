@@ -25,6 +25,8 @@ export function ProductCardSkeleton() {
 }
 
 export function ProductCard({ product }) {
+  const buyUrl = product?.buyLink || product?.affiliateUrl || ''
+
   return (
     <div style={{ perspective: 1500 }}>
       <motion.div
@@ -66,10 +68,13 @@ export function ProductCard({ product }) {
                 View
               </Link>
               <a
-                href={product.affiliateUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-1.5 text-xs text-[hsl(var(--fg))] transition hover:bg-black/5"
+                href={buyUrl || undefined}
+                target={buyUrl ? '_blank' : undefined}
+                rel={buyUrl ? 'noreferrer' : undefined}
+                aria-disabled={!buyUrl}
+                className={`rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-1.5 text-xs text-[hsl(var(--fg))] transition hover:bg-black/5 ${
+                  buyUrl ? '' : 'pointer-events-none opacity-50'
+                }`}
               >
                 Buy
                 <ExternalLink className="h-3.5 w-3.5" />
