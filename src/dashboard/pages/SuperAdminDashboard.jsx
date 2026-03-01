@@ -44,7 +44,7 @@ export function SuperAdminDashboard() {
         ) : ordersQuery.isError ? (
           <div className="mt-4 text-sm text-[hsl(var(--muted-fg))]">Failed to load orders</div>
         ) : (
-          <div className="mt-4">
+          <div className="mt-4 max-w-full">
             <RecentOrdersTable orders={ordersQuery.data || []} />
           </div>
         )}

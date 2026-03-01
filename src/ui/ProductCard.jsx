@@ -73,16 +73,16 @@ export function ProductCard({ product }) {
           </div>
         </div>
 
-        <div className="space-y-2 p-4">
+        <div className="space-y-2 p-4 min-w-0">
           <div className="line-clamp-1 text-base font-semibold text-[hsl(var(--fg))]">{product.title}</div>
           <div className="line-clamp-2 text-sm text-[hsl(var(--muted-fg))]">{product.description}</div>
 
-          <div className="flex items-center justify-between pt-2">
-            <div className="text-sm font-medium text-[hsl(var(--fg))]">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+            <div className="shrink-0 text-sm font-medium text-[hsl(var(--fg))]">
               {product.currency || 'USD'} {Number(product.price).toFixed(2)}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <Link
                 to={`/product/${product._id}`}
                 className="rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-1.5 text-xs text-[hsl(var(--fg))] transition hover:bg-black/5"

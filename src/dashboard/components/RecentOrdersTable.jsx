@@ -1,6 +1,6 @@
 export function RecentOrdersTable({ orders }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 backdrop-blur">
+    <div className="max-w-full overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 backdrop-blur">
       <table className="w-full min-w-[900px] text-left text-sm">
         <thead className="text-[hsl(var(--muted-fg))]">
           <tr>

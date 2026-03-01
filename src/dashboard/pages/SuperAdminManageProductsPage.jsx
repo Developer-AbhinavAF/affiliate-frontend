@@ -80,7 +80,8 @@ export function SuperAdminManageProductsPage() {
         </select>
       </div>
 
-      <div className="grid gap-3 sm:hidden">
+      {/* Mobile cards */}
+      <div className="grid gap-3 md:hidden">
         {rows.map((p) => (
           <div key={p._id} className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-4 backdrop-blur">
             <div className="flex items-start justify-between gap-3">
@@ -119,8 +120,9 @@ export function SuperAdminManageProductsPage() {
         {rows.length === 0 ? <div className="text-sm text-[hsl(var(--muted-fg))]">No products</div> : null}
       </div>
 
-      <div className="hidden overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 backdrop-blur sm:block">
-        <table className="w-full min-w-[980px] text-left text-sm">
+      {/* Desktop table */}
+      <div className="hidden overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 backdrop-blur md:block">
+        <table className="w-full min-w-[900px] text-left text-sm">
           <thead className="text-[hsl(var(--muted-fg))]">
             <tr>
               <th className="py-2">Title</th>

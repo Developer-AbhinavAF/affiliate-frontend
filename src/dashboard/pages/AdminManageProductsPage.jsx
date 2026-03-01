@@ -81,7 +81,7 @@ export function AdminManageProductsPage() {
       </div>
 
       {/* Mobile cards */}
-      <div className="grid gap-3 sm:hidden">
+      <div className="grid gap-3 md:hidden">
         {rows.map((p) => (
           <div key={p._id} className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-4 backdrop-blur">
             <div className="flex items-start justify-between gap-3">
@@ -120,7 +120,7 @@ export function AdminManageProductsPage() {
       </div>
 
       {/* Desktop table */}
-      <div className="hidden overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 backdrop-blur sm:block">
+      <div className="hidden overflow-x-auto rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 backdrop-blur md:block">
         <table className="w-full min-w-[900px] text-left text-sm">
           <thead className="text-[hsl(var(--muted-fg))]">
             <tr>

@@ -64,13 +64,13 @@ export function AdminDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.35, ease: 'easeOut' }}
-          className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 shadow-sm backdrop-blur"
+          className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-5 shadow-sm backdrop-blur overflow-hidden"
         >
           <div className="text-sm font-medium text-[hsl(var(--fg))]">Orders by Status</div>
           <div className="mt-4 h-72">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={statusData} dataKey="value" nameKey="name" outerRadius={110}>
+                <Pie data={statusData} dataKey="value" nameKey="name" outerRadius={90}>
                   {statusData.map((entry) => (
                     <Cell key={entry.name} fill={statusColors[entry.name] || '#94a3b8'} />
                   ))}
