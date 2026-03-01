@@ -23,6 +23,18 @@ export function SuperAdminUsersPage() {
     },
   })
 
+  const deleteUser = useMutation({
+    mutationFn: async (id) => {
+      const res = await api.delete(`/api/superadmin/users/${id}`)
+      return res.data
+    },
+    onSuccess: async () => {
+      push('User deleted')
+      await qc.invalidateQueries({ queryKey: ['superadmin', 'users'] })
+    },
+    onError: (e) => push(e?.response?.data?.message || 'Failed to delete user'),
+  })
+
   const toggleUser = useMutation({
     mutationFn: async (id) => {
       const res = await api.patch(`/api/superadmin/users/${id}/toggle`)
@@ -83,7 +95,7 @@ export function SuperAdminUsersPage() {
         className="rounded-sm border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
       >
         <div className="text-sm font-medium text-zinc-900 dark:text-zinc-50">All Users</div>
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 max-w-full overflow-x-auto">
           <table className="w-full min-w-[1100px] text-left text-sm">
             <thead className="text-zinc-600 dark:text-zinc-400">
               <tr>
@@ -123,6 +135,18 @@ export function SuperAdminUsersPage() {
                           Set {r}
                         </button>
                       ))}
+
+                      <button
+                        disabled={deleteUser.isPending || u.role === 'SUPER_ADMIN'}
+                        onClick={() => {
+                          const ok = window.confirm(`Delete user ${u.email}? This cannot be undone.`)
+                          if (!ok) return
+                          deleteUser.mutate(u._id)
+                        }}
+                        className="rounded-sm border border-red-200 bg-white px-3 py-1.5 text-red-700 hover:bg-red-50 disabled:opacity-60 dark:border-red-900/40 dark:bg-zinc-900 dark:text-red-300 dark:hover:bg-red-950/40"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>

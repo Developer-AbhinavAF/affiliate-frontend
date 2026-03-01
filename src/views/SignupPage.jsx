@@ -51,8 +51,10 @@ export function SignupPage() {
             <div className="text-sm text-zinc-600 dark:text-zinc-400">Email sent to {maskedEmail || email}</div>
             <input
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => setOtp(String(e.target.value || '').replace(/\D+/g, '').slice(0, 6))}
               placeholder="Enter 6-digit OTP"
+              inputMode="numeric"
+              maxLength={6}
               className="w-full rounded-sm border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
             />
           </div>
@@ -64,14 +66,14 @@ export function SignupPage() {
             try {
               setBusy(true)
               if (step === 1) {
-                const data = await requestSignupOtp({ name, email, password })
+                const data = await requestSignupOtp({ name: name.trim(), email: email.trim(), password })
                 setMaskedEmail(data?.maskedEmail || '')
                 setStep(2)
                 push('OTP sent')
                 return
               }
 
-              await verifySignupOtp({ email, code: otp })
+              await verifySignupOtp({ email: email.trim(), code: otp })
               push('Account verified')
               nav('/')
             } catch (e) {

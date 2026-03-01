@@ -15,7 +15,7 @@ export function ForgotPasswordPage() {
   async function handleSendOtp() {
     try {
       setBusy(true)
-      const { data } = await api.post('/api/auth/forgot-password', { identifier })
+      const { data } = await api.post('/api/auth/forgot-password', { identifier: identifier.trim() })
       setMaskedEmail(data?.maskedEmail || '')
       push('OTP sent')
       setStep(2)
@@ -31,7 +31,7 @@ export function ForgotPasswordPage() {
     try {
       setBusy(true)
       await api.post('/api/auth/reset-password', {
-        identifier,
+        identifier: identifier.trim(),
         code: otp,
         newPassword,
       })
@@ -76,8 +76,10 @@ export function ForgotPasswordPage() {
             <div className="text-sm text-zinc-600 dark:text-zinc-400">Email sent to {maskedEmail || 'your email'}</div>
             <input
               value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              onChange={(e) => setOtp(String(e.target.value || '').replace(/\D+/g, '').slice(0, 6))}
               placeholder="6-digit OTP"
+              inputMode="numeric"
+              maxLength={6}
               className="w-full rounded-sm border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-zinc-700"
             />
             <button
