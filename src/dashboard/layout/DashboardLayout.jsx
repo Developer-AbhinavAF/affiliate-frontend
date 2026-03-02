@@ -104,12 +104,15 @@ export function DashboardLayout({ title }) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <img
-                  src="/Logo.jpeg"
+                  src="/Logo.png"
                   alt="TrendKart"
-                  className="h-9 w-9 rounded-sm border border-zinc-200 object-cover dark:border-zinc-700"
+                  className="h-12 w-12 rounded-sm object-cover dark:border-zinc-700"
                 />
                 <div className="leading-tight">
-                  <div className="text-sm font-semibold text-[hsl(var(--fg))]">TrendKart</div>
+                  <img 
+                    src="/web-name.png"
+                    className="text-sm font-semibold text-[hsl(var(--fg))]" 
+                  />
                   <div className="text-xs text-[hsl(var(--muted-fg))]">{headerMeta.role}</div>
                 </div>
               </div>
@@ -139,12 +142,14 @@ export function DashboardLayout({ title }) {
           <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-3">
             <div className="flex items-center gap-2 px-2 py-2">
               <img
-                src="/Logo.jpeg"
+                src="/Logo.png"
                 alt="TrendKart"
                 className="h-9 w-9 rounded-sm border border-zinc-200 object-cover dark:border-zinc-700"
               />
               <div className="leading-tight">
-                <div className="text-sm font-semibold text-[hsl(var(--fg))]">TrendKart</div>
+                <img 
+                    src="/web-name.png"
+                    className="text-sm font-semibold text-[hsl(var(--fg))]" />
                 <div className="text-xs text-[hsl(var(--muted-fg))]">{headerMeta.role}</div>
               </div>
             </div>

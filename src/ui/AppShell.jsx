@@ -32,9 +32,9 @@ function TopNav() {
     <div className="sticky top-0 z-40 px-[7px] pt-[7px] bg-zinc-950/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/90 px-4 py-3 text-zinc-50 shadow-[0_18px_45px_rgba(0,0,0,0.7)]">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/Logo.jpeg" alt="TrendKart" className="h-9 w-9 rounded-sm border border-zinc-300 object-cover dark:border-zinc-700" />
+          <img src="/Logo.png" alt="TrendKart" className="h-9 w-9 rounded-sm border border-zinc-300 object-cover dark:border-zinc-700" />
           <div className="leading-tight">
-            <div className="text-xl font-semibold text-zinc-50">TrendKart</div>
+            <img src="/web-name.png" alt="TrendKart" className="h-5 w-auto" />
           </div>
         </Link>
 
