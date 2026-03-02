@@ -43,13 +43,18 @@ const menuByRole = {
     { to: '/admin/orders', icon: ClipboardList, label: 'Orders' },
     { to: '/admin/reports', icon: FileText, label: 'Reports' },
   ],
+  HELPER: [
+    { to: '/helper', icon: BarChart3, label: 'Dashboard' },
+    { to: '/helper/products/new', icon: Boxes, label: 'Add New Product' },
+    { to: '/helper/manage-products', icon: Boxes, label: 'My Products' },
+  ],
   CUSTOMER: [
     { to: '/', icon: ShoppingBag, label: 'Store' },
     { to: '/orders', icon: ClipboardList, label: 'My Orders' },
     { to: '/wishlist', icon: Boxes, label: 'Wishlist' },
     { to: '/account', icon: Users, label: 'Account' },
   ],
-}
+};
 
 export function DashboardLayout({ title }) {
   const { user, logout } = useAuth()

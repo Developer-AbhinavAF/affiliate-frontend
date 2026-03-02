@@ -24,6 +24,7 @@ function TopNav() {
     if (!user?.role) return null
     if (user.role === 'SUPER_ADMIN') return { to: '/superadmin', label: 'Panel' }
     if (user.role === 'ADMIN') return { to: '/admin', label: 'Panel' }
+    if (user.role === 'HELPER') return { to: '/helper', label: 'Panel' }
     if (user.role === 'CUSTOMER') return { to: '/account', label: 'Account' }
     return null
   }, [user?.role])

@@ -40,7 +40,7 @@ export function AdminLoginPage() {
           onClick={async () => {
             try {
               setBusy(true)
-              await login({ username, password })
+              await login({ username: username.trim(), password })
               push('Logged in')
               nav('/admin')
             } catch {

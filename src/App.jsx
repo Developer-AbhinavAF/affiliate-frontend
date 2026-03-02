@@ -34,6 +34,10 @@ import { ForgotPasswordPage } from './views/ForgotPasswordPage'
 import { SignupPage } from './views/SignupPage'
 import { NotFoundPage } from './views/NotFoundPage'
 import { SuperAdminLoginPage } from './views/SuperAdminLoginPage'
+import { HelperDashboard } from './dashboard/pages/HelperDashboard'
+import { HelperAddProductPage } from './dashboard/pages/HelperAddProductPage'
+import { HelperManageProductsPage } from './dashboard/pages/HelperManageProductsPage'
+import { HelperEditProductPage } from './dashboard/pages/HelperEditProductPage'
 
 const queryClient = new QueryClient()
 
@@ -59,6 +63,7 @@ function RequireRole({ allowedRoles, loginPath }) {
     const byRole = {
       SUPER_ADMIN: '/superadmin',
       ADMIN: '/admin',
+      HELPER: '/helper',
       CUSTOMER: '/',
     }
     return <Navigate to={byRole[user.role] || '/'} replace />
@@ -111,6 +116,15 @@ function App() {
                   <Route path="/admin/products/:id/edit" element={<AdminEditProductPage />} />
                   <Route path="/admin/orders" element={<AdminOrdersPage />} />
                   <Route path="/admin/reports" element={<ReportsPage />} />
+                </Route>
+              </Route>
+
+              <Route element={<RequireRole allowedRoles={['HELPER']} loginPath="/admin/login" />}>
+                <Route element={<DashboardLayout title="Helper Panel" />}>
+                  <Route path="/helper" element={<HelperDashboard />} />
+                  <Route path="/helper/manage-products" element={<HelperManageProductsPage />} />
+                  <Route path="/helper/products/new" element={<HelperAddProductPage />} />
+                  <Route path="/helper/products/:id/edit" element={<HelperEditProductPage />} />
                 </Route>
               </Route>
 
