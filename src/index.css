@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap');
 
 :root {
   color-scheme: light;
@@ -39,6 +40,16 @@ body {
     "Segoe UI Emoji";
   background: hsl(var(--bg));
   color: hsl(var(--fg));
+}
+
+/* Visually hide scrollbars (keep scroll working) */
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 #root {

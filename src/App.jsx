@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useState } from 'react'
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 
 import { AuthProvider, useAuth } from './state/auth'
@@ -34,6 +35,7 @@ import { ForgotPasswordPage } from './views/ForgotPasswordPage'
 import { SignupPage } from './views/SignupPage'
 import { NotFoundPage } from './views/NotFoundPage'
 import { SuperAdminLoginPage } from './views/SuperAdminLoginPage'
+import { IntroLoader } from './components/IntroLoader'
 import { HelperDashboard } from './dashboard/pages/HelperDashboard'
 import { HelperAddProductPage } from './dashboard/pages/HelperAddProductPage'
 import { HelperManageProductsPage } from './dashboard/pages/HelperManageProductsPage'
@@ -72,10 +74,13 @@ function RequireRole({ allowedRoles, loginPath }) {
 }
 
 function App() {
+  const [introDone, setIntroDone] = useState(false)
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
+          {!introDone ? <IntroLoader onComplete={() => setIntroDone(true)} /> : null}
           <AppShell>
             <Routes>
               <Route path="/" element={<HomePage />} />
