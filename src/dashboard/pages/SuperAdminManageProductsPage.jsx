@@ -9,7 +9,7 @@ export function SuperAdminManageProductsPage() {
   const qc = useQueryClient()
   const { push } = useToast()
   const [q, setQ] = useState('')
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState('PENDING_APPROVAL')
   const [page, setPage] = useState(1)
 
   const { data, isLoading, isError } = useQuery({

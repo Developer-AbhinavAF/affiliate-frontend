@@ -9,7 +9,7 @@ const statuses = ['', 'PENDING_APPROVAL', 'APPROVED', 'REJECTED', 'SUSPENDED', '
 export function SuperAdminProductsPage() {
   const qc = useQueryClient()
   const { push } = useToast()
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState('PENDING_APPROVAL')
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['superadmin', 'products', status],

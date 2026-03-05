@@ -75,7 +75,7 @@ export function IntroLoader({ onComplete }) {
               initial={{ opacity: 1 }}
               animate={{ opacity: 1 }}
               className="relative flex items-center"
-              style={{ gap: 'clamp(14px, 2vw, 24px)' }}
+              style={{ gap: 'clamp(8px, 1.2vw, 18px)' }}
             >
               {/* STEP 1 + STEP 2: Cart pop-in then slide left */}
               <motion.img
@@ -152,6 +152,11 @@ export function IntroLoader({ onComplete }) {
                         <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#000000" floodOpacity="0.35" />
                       </filter>
                     </defs>
+                    <motion.g
+                      initial={{ opacity: 0, y: 2 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 3.0, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    >
                     <motion.path
                       d="M10 15 C 155 30, 330 28, 448 14 C 474 11, 497 11, 510 12 M510 12 L498 6 M510 12 L498 18"
                       stroke="url(#tk_swoosh)"
@@ -160,9 +165,49 @@ export function IntroLoader({ onComplete }) {
                       strokeLinejoin="round"
                       filter="url(#tk_glow)"
                       initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: 3.0, duration: 1.25, ease: [0.4, 0, 0.2, 1] }}
+                      animate={{ pathLength: [0, 1.02, 1] }}
+                      transition={{ delay: 3.0, duration: 1.35, ease: [0.22, 1, 0.36, 1], times: [0, 0.84, 1] }}
                     />
+
+                    {/* Spark dot riding the tip (pen-like) */}
+                    <motion.circle
+                      r="4.4"
+                      fill="rgba(255,255,255,0.95)"
+                      filter="url(#tk_glow)"
+                      initial={{ opacity: 0, cx: 10, cy: 15 }}
+                      animate={{
+                        opacity: [0, 1, 1, 0],
+                        cx: [10, 155, 330, 448, 510],
+                        cy: [15, 30, 28, 14, 12],
+                      }}
+                      transition={{
+                        delay: 3.0,
+                        duration: 1.35,
+                        ease: [0.22, 1, 0.36, 1],
+                        times: [0, 0.12, 0.55, 0.85, 1],
+                      }}
+                    />
+
+                    {/* Subtle shimmer sweep after draw completes */}
+                    <motion.path
+                      d="M10 15 C 155 30, 330 28, 448 14 C 474 11, 497 11, 510 12 M510 12 L498 6 M510 12 L498 18"
+                      stroke="rgba(255,255,255,0.55)"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      opacity={0}
+                      pathLength={1}
+                      strokeDasharray="18 520"
+                      initial={{ opacity: 0, strokeDashoffset: 520 }}
+                      animate={{ opacity: [0, 0.9, 0], strokeDashoffset: [520, 0, -520] }}
+                      transition={{
+                        delay: 4.25,
+                        duration: 1.2,
+                        ease: [0.22, 1, 0.36, 1],
+                        times: [0, 0.5, 1],
+                      }}
+                    />
+                    </motion.g>
                   </motion.svg>
                 </div>
               </motion.div>
