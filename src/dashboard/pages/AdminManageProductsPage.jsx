@@ -8,6 +8,7 @@ import { useToast } from '../../components/Toaster/Toaster'
 export function AdminManageProductsPage() {
   const qc = useQueryClient()
   const { push } = useToast()
+  const [qInput, setQInput] = useState('')
   const [q, setQ] = useState('')
   const [status, setStatus] = useState('')
   const [page, setPage] = useState(1)
@@ -21,6 +22,24 @@ export function AdminManageProductsPage() {
       return res.data
     },
   })
+
+  const { data: suggestData } = useQuery({
+    queryKey: ['admin', 'manage-products-suggest', qInput],
+    enabled: qInput.trim().length >= 2,
+    queryFn: async () => {
+      const res = await api.get('/api/products/manage/suggest', {
+        params: { q: qInput.trim() },
+      })
+      return res.data
+    },
+  })
+
+  const suggestions = suggestData?.items || []
+
+  function runSearch(nextQ) {
+    setQ(nextQ)
+    setPage(1)
+  }
 
   const del = useMutation({
     mutationFn: async (id) => {
@@ -54,15 +73,47 @@ export function AdminManageProductsPage() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <input
-          value={q}
-          onChange={(e) => {
-            setQ(e.target.value)
-            setPage(1)
-          }}
-          placeholder="Search by title"
-          className="w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
-        />
+        <div className="relative">
+          <div className="flex gap-2">
+            <input
+              value={qInput}
+              onChange={(e) => setQInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  runSearch(qInput.trim())
+                }
+              }}
+              placeholder="Type full title and press Enter"
+              className="w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+            />
+            <button
+              type="button"
+              onClick={() => runSearch(qInput.trim())}
+              className="shrink-0 rounded-xl bg-[hsl(var(--fg))] px-4 py-3 text-sm font-medium text-[hsl(var(--bg))] transition hover:opacity-90"
+            >
+              Search
+            </button>
+          </div>
+
+          {qInput.trim().length >= 2 && suggestions.length ? (
+            <div className="absolute z-10 mt-2 w-full overflow-hidden rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm">
+              {suggestions.map((s) => (
+                <button
+                  key={s._id}
+                  type="button"
+                  onClick={() => {
+                    setQInput(s.title)
+                    runSearch(s.title)
+                  }}
+                  className="block w-full truncate px-4 py-2 text-left text-sm text-[hsl(var(--fg))] hover:bg-black/5 dark:hover:bg-white/10"
+                >
+                  {s.title}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
         <select
           value={status}
           onChange={(e) => {

@@ -294,15 +294,16 @@ function ReviewsBlock({ rating, totalReviews, reviews }) {
 
 export function ProductPage() {
   const { id } = useParams()
-  const { push } = useToast()
   const { user } = useAuth()
-  const navigate = useNavigate()
+  const { push } = useToast()
   const location = useLocation()
   const queryClient = useQueryClient()
 
   const [activeImage, setActiveImage] = useState(0)
   const [tab, setTab] = useState('description')
   const [wish, setWish] = useState(false)
+  const [showAllHighlights, setShowAllHighlights] = useState(false)
+  const [showFullDescription, setShowFullDescription] = useState(false)
   const [question, setQuestion] = useState('')
   const [questionBusy, setQuestionBusy] = useState(false)
   const mainRef = useRef(null)
@@ -327,6 +328,8 @@ export function ProductPage() {
   const rating = p?.rating ?? (Array.isArray(p?.reviews) && p.reviews.length ? p.reviews.reduce((a, r) => a + (Number(r.rating) || 0), 0) / p.reviews.length : 0)
   const totalReviews = p?.totalReviews ?? p?.totalRatings ?? p?.reviews?.length ?? 0
   const highlights = p?.highlights?.length ? p.highlights : extractHighlights(p?.description, 6)
+  const highlightsToShow = showAllHighlights ? highlights : highlights.slice(0, 6)
+  const canToggleHighlights = highlights.length > 6
 
   const inStock = typeof p?.stock === 'number' ? p.stock > 0 : p?.status ? String(p.status).toLowerCase() !== 'out_of_stock' : true
 
@@ -676,13 +679,23 @@ export function ProductPage() {
               <div className="mt-5 rounded-3xl border border-zinc-200 bg-white/70 p-5 dark:border-zinc-800 dark:bg-zinc-950/30">
                 <div className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">Highlights</div>
                 <ul className="mt-3 space-y-2 text-sm text-zinc-800 dark:text-zinc-200">
-                  {highlights.map((h, idx) => (
+                  {highlightsToShow.map((h, idx) => (
                     <li key={idx} className="flex gap-2">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-900 dark:bg-zinc-200" />
                       <span className="min-w-0">{h}</span>
                     </li>
                   ))}
                 </ul>
+
+                {canToggleHighlights ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllHighlights((v) => !v)}
+                    className="mt-3 text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
+                  >
+                    {showAllHighlights ? 'Show less' : 'Show more'}
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -789,7 +802,25 @@ export function ProductPage() {
 
             <div className="p-4">
               {tab === 'description' ? (
-                <div className="text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">{p.description || 'No description available.'}</div>
+                <div>
+                  <div
+                    className={`text-sm leading-relaxed text-zinc-800 dark:text-zinc-200 ${
+                      showFullDescription ? '' : 'line-clamp-6'
+                    }`}
+                  >
+                    {p.description || 'No description available.'}
+                  </div>
+
+                  {String(p?.description || '').trim().length > 260 ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowFullDescription((v) => !v)}
+                      className="mt-3 text-sm font-medium text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50"
+                    >
+                      {showFullDescription ? 'Show less' : 'Show more'}
+                    </button>
+                  ) : null}
+                </div>
               ) : null}
 
               {tab === 'specs' ? <SpecsTable specs={specs} /> : null}

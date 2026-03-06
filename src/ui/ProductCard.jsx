@@ -2,6 +2,12 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ExternalLink, Star } from 'lucide-react'
 
+import logoAcer from '../assets/marketplaces/acer.svg'
+import logoAmazon from '../assets/marketplaces/amazon.svg'
+import logoFlipkart from '../assets/marketplaces/Flipkart.png'
+import logoHp from '../assets/marketplaces/hp.png'
+import logoPuma from '../assets/marketplaces/puma.svg'
+
 export function ProductCardSkeleton() {
   return (
     <div className="animate-pulse overflow-hidden rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-sm">
@@ -36,12 +42,72 @@ export function ProductCard({ product }) {
     return ''
   })()
 
-  const source = product?.sourceCompany || (Array.isArray(product?.tags) ? product.tags.find((t) => /amazon|flipkart/i.test(String(t))) : '')
+  const source =
+    product?.sourceCompany ||
+    (Array.isArray(product?.tags) ? product.tags.find((t) => /amazon|flipkart|myntra|ajio|shopsy|puma|acer|muscleblaze|nutrabay|hp/i.test(String(t))) : '')
+
   const sourceLabel = (() => {
     const s = String(source || '').toLowerCase()
     if (s.includes('flipkart')) return 'Flipkart'
     if (s.includes('amazon')) return 'Amazon'
+    if (s.includes('myntra')) return 'Myntra'
+    if (s.includes('ajio')) return 'Ajio'
+    if (s.includes('shopsy')) return 'Shopsy'
+    if (s.includes('puma')) return 'Puma'
+    if (s.includes('acer')) return 'Acer'
+    if (s.includes('muscleblaze')) return 'MuscleBlaze'
+    if (s.includes('nutrabay')) return 'Nutrabay'
+    if (s === 'hp' || s.includes(' hp')) return 'HP'
+    if (s.includes('custom')) return 'Custom'
     return ''
+  })()
+
+  const sourceLogo = (() => {
+    const s = String(sourceLabel || '').toLowerCase()
+    if (!s) return null
+    const meta = {
+      flipkart: { bg: 'bg-[#1f4fd6]', src: logoFlipkart },
+      amazon: { bg: 'bg-[#111827]', src: logoAmazon },
+      myntra: { bg: 'bg-[#ff3f6c]', src: '' },
+      ajio: { bg: 'bg-[#0f172a]', src: '' },
+      shopsy: { bg: 'bg-[#6d28d9]', src: '' },
+      puma: { bg: 'bg-[#111827]', src: logoPuma },
+      acer: { bg: 'bg-[#16a34a]', src: logoAcer },
+      muscleblaze: { bg: 'bg-[#f97316]', src: '' },
+      nutrabay: { bg: 'bg-[#0ea5e9]', src: '' },
+      hp: { bg: 'bg-[#2563eb]', src: logoHp },
+      custom: { bg: 'bg-[hsl(var(--muted))]', src: '' },
+    }
+
+    const key =
+      s === 'hp'
+        ? 'hp'
+        : s.includes('muscleblaze')
+          ? 'muscleblaze'
+          : s.includes('nutrabay')
+            ? 'nutrabay'
+            : s
+    const cfg = meta[key] || meta.custom
+    const fallbackText = s === 'hp' ? 'HP' : sourceLabel.slice(0, 1).toUpperCase()
+
+    const src = cfg.src
+
+    return (
+      <span className={`relative inline-flex h-4 w-4 items-center justify-center overflow-hidden rounded-sm ${cfg.bg}`}>
+        <span className="text-[10px] font-semibold text-white">{fallbackText}</span>
+        {src ? (
+          <img
+            src={src}
+            alt={sourceLabel}
+            className="absolute inset-0 m-auto h-3.5 w-3.5"
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+            }}
+          />
+        ) : null}
+      </span>
+    )
   })()
 
   return (
@@ -63,11 +129,12 @@ export function ProductCard({ product }) {
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/55 via-black/10 to-transparent" />
           {sourceLabel ? (
-            <div className="absolute right-3 top-3 rounded-full border border-white/30 bg-white/20 px-2 py-1 text-xs text-white backdrop-blur">
-              {sourceLabel} ✅
+            <div className="absolute right-3 top-3 inline-flex items-center gap-2 rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-2 py-1 text-xs text-[hsl(var(--fg))] shadow-sm backdrop-blur">
+              {sourceLogo}
+              <span className="min-w-0 truncate">{sourceLabel}</span>
             </div>
           ) : null}
-          <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full border border-white/30 bg-white/20 px-2 py-1 text-xs text-white backdrop-blur">
+          <div className="absolute left-3 top-3 flex items-center gap-1 rounded-sm border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-2 py-1 text-xs text-[hsl(var(--fg))] shadow-sm backdrop-blur">
             <Star className="h-3.5 w-3.5 text-amber-300" />
             {product.rating?.toFixed?.(1) ?? '4.6'}
           </div>

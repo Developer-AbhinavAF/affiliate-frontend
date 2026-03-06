@@ -15,6 +15,54 @@ function normalizeTags(input) {
     .slice(0, 20)
 }
 
+function kvObjectToArray(obj) {
+  if (!obj || typeof obj !== 'object') return []
+  if (Array.isArray(obj)) {
+    return obj
+      .map((x) => ({ key: String(x?.key || '').trim(), value: String(x?.value || '').trim() }))
+      .filter((x) => x.key && x.value)
+  }
+  return Object.entries(obj)
+    .map(([k, v]) => ({ key: String(k).trim(), value: String(v ?? '').trim() }))
+    .filter((x) => x.key && x.value)
+}
+
+function safeParseJson(text) {
+  try {
+    return { ok: true, value: JSON.parse(text) }
+  } catch (e) {
+    return { ok: false, error: e }
+  }
+}
+
+function priceToNumber(v) {
+  if (v === null || v === undefined || v === '') return 0
+  const s = String(v).replace(/[^\d.]/g, '')
+  const n = Number(s)
+  return Number.isFinite(n) ? n : 0
+}
+
+function linesToArray(text) {
+  return String(text || '')
+    .split('\n')
+    .map((x) => x.trim())
+    .filter(Boolean)
+}
+
+function kvLinesToArray(text) {
+  const rows = linesToArray(text)
+  return rows
+    .map((line) => {
+      const idx = line.indexOf(':')
+      if (idx <= 0) return null
+      const key = line.slice(0, idx).trim()
+      const value = line.slice(idx + 1).trim()
+      if (!key || !value) return null
+      return { key, value }
+    })
+    .filter(Boolean)
+}
+
 function validate(values) {
   const errors = {}
   if (!values.title || values.title.trim().length < 3) errors.title = 'Title must be at least 3 characters'
@@ -32,7 +80,6 @@ export function ProductForm({
   initial,
   onCancel,
   onSuccess,
-  uploadEndpoint = '/api/uploads/product-images',
 }) {
   const { push } = useToast()
 
@@ -54,9 +101,21 @@ export function ProductForm({
     stock: initial?.stock ?? 0,
     sku: initial?.sku || '',
     shippingCost: initial?.shippingCost ?? 0,
+    flipkartAssured: Boolean(initial?.flipkartAssured),
+    cashOnDelivery: initial?.cashOnDelivery || '',
+    returnPolicyDays: initial?.returnPolicyDays ?? 0,
+    highlightsText: (initial?.highlights || []).join('\n'),
+    specsText: (initial?.specs || []).map((x) => `${x.key}: ${x.value}`).join('\n'),
+    manufacturerInfoText: (initial?.manufacturerInfo || []).map((x) => `${x.key}: ${x.value}`).join('\n'),
+    scrapedProductId: initial?.scrapedProductId || '',
+    scrapedProductUrl: initial?.scrapedProductUrl || '',
+    scrapedAt: initial?.scrapedAt ? new Date(initial.scrapedAt).toISOString() : '',
+    scrapedOffersText: (initial?.scrapedOffers || []).join('\n'),
     status: initial?.status || 'DRAFT',
     tagsText: (initial?.tags || []).join(', '),
   }))
+
+  const [importText, setImportText] = useState('')
 
   const [existingImages, setExistingImages] = useState(() => initial?.images || [])
   const [newFiles, setNewFiles] = useState([])
@@ -83,13 +142,77 @@ export function ProductForm({
       stock: initial?.stock ?? 0,
       sku: initial?.sku || '',
       shippingCost: initial?.shippingCost ?? 0,
+      flipkartAssured: Boolean(initial?.flipkartAssured),
+      cashOnDelivery: initial?.cashOnDelivery || '',
+      returnPolicyDays: initial?.returnPolicyDays ?? 0,
+      highlightsText: (initial?.highlights || []).join('\n'),
+      specsText: (initial?.specs || []).map((x) => `${x.key}: ${x.value}`).join('\n'),
+      manufacturerInfoText: (initial?.manufacturerInfo || []).map((x) => `${x.key}: ${x.value}`).join('\n'),
+      scrapedProductId: initial?.scrapedProductId || '',
+      scrapedProductUrl: initial?.scrapedProductUrl || '',
+      scrapedAt: initial?.scrapedAt ? new Date(initial.scrapedAt).toISOString() : '',
+      scrapedOffersText: (initial?.scrapedOffers || []).join('\n'),
       status: initial?.status || 'DRAFT',
       tagsText: (initial?.tags || []).join(', '),
     })
     setExistingImages(initial?.images || [])
     setNewFiles([])
     setErrors({})
+    setImportText('')
   }, [initial])
+
+  function importFromScrapedJson() {
+    const parsed = safeParseJson(importText)
+    if (!parsed.ok) {
+      push('Invalid JSON')
+      return
+    }
+
+    const raw = parsed.value
+    const data = raw?.data && typeof raw?.data === 'object' ? raw.data : raw
+
+    const title = String(data?.title || '').trim()
+    const description = String(data?.description || '').trim()
+    const brand = String(data?.brand || '').trim()
+
+    const discountPrice = data?.discountPrice
+    const realPrice = data?.realPrice
+    const rating = data?.rating
+    const ratingCount = data?.ratingCount
+
+    const shippingCost = data?.shippingCost
+
+    const highlights = Array.isArray(data?.highlights) ? data.highlights : []
+    const offers = Array.isArray(data?.offers) ? data.offers : []
+
+    const specsArr = kvObjectToArray(data?.specifications)
+    const manuArr = kvObjectToArray(data?.manufacturerInfo)
+
+    setValues((v) => ({
+      ...v,
+      title: title || v.title,
+      description: description || v.description,
+      brand: brand || v.brand,
+      sourceCompany: 'Flipkart',
+      price: priceToNumber(discountPrice) || priceToNumber(realPrice) || v.price,
+      originalPrice: priceToNumber(realPrice) || v.originalPrice,
+      ratingAvg: priceToNumber(rating) || v.ratingAvg,
+      ratingCount: priceToNumber(ratingCount) || v.ratingCount,
+      shippingCost: shippingCost === '' || shippingCost === null || shippingCost === undefined ? v.shippingCost : priceToNumber(shippingCost),
+      flipkartAssured: Boolean(data?.flipkartAssured) || v.flipkartAssured,
+      cashOnDelivery: String(data?.cashOnDelivery || v.cashOnDelivery || '').trim(),
+      returnPolicyDays: data?.returnPolicyDays === '' || data?.returnPolicyDays === null || data?.returnPolicyDays === undefined ? v.returnPolicyDays : priceToNumber(data?.returnPolicyDays),
+      highlightsText: highlights.length ? highlights.join('\n') : v.highlightsText,
+      scrapedProductId: String(data?.productId || v.scrapedProductId || '').trim(),
+      scrapedProductUrl: String(data?.productUrl || v.scrapedProductUrl || '').trim(),
+      scrapedAt: String(data?.scrapedAt || v.scrapedAt || '').trim(),
+      scrapedOffersText: offers.length ? offers.join('\n') : v.scrapedOffersText,
+      specsText: specsArr.length ? specsArr.map((x) => `${x.key}: ${x.value}`).join('\n') : v.specsText,
+      manufacturerInfoText: manuArr.length ? manuArr.map((x) => `${x.key}: ${x.value}`).join('\n') : v.manufacturerInfoText,
+    }))
+
+    push('Imported scraped JSON')
+  }
 
   const previews = useMemo(() => {
     return newFiles.map((f) => ({
@@ -209,6 +332,16 @@ export function ProductForm({
         stock: Number(values.stock),
         sku: values.sku.trim(),
         shippingCost: Number(values.shippingCost),
+        flipkartAssured: Boolean(values.flipkartAssured),
+        cashOnDelivery: String(values.cashOnDelivery || '').trim(),
+        returnPolicyDays: Number(values.returnPolicyDays),
+        highlights: linesToArray(values.highlightsText),
+        specs: kvLinesToArray(values.specsText),
+        manufacturerInfo: kvLinesToArray(values.manufacturerInfoText),
+        scrapedProductId: String(values.scrapedProductId || '').trim(),
+        scrapedProductUrl: String(values.scrapedProductUrl || '').trim(),
+        scrapedAt: String(values.scrapedAt || '').trim(),
+        scrapedOffers: linesToArray(values.scrapedOffersText),
         status: values.status,
         tags: normalizeTags(values.tagsText),
         images: [...existingImages, ...uploaded],
@@ -230,7 +363,6 @@ export function ProductForm({
       const status = err?.response?.status
       const backendMsg = err?.response?.data?.message
       const msg = backendMsg || err?.message || 'Failed to save product'
-      // eslint-disable-next-line no-console
       console.error('Product save failed', {
         status,
         message: msg,
@@ -245,6 +377,31 @@ export function ProductForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-4 backdrop-blur">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Import Scraped JSON</div>
+            <div className="mt-1 text-xs text-[hsl(var(--muted-fg))]">
+              Paste the JSON downloaded from the Flipkart extension to auto-fill fields.
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={importFromScrapedJson}
+            className="w-full rounded-xl bg-[hsl(var(--fg))] px-4 py-2 text-sm font-medium text-[hsl(var(--bg))] transition hover:opacity-90 sm:w-auto"
+          >
+            Import JSON
+          </button>
+        </div>
+        <textarea
+          value={importText}
+          onChange={(e) => setImportText(e.target.value)}
+          rows={5}
+          className="mt-3 w-full resize-none rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+          placeholder="Paste JSON here..."
+        />
+      </div>
+
       <div className="grid gap-4 lg:grid-cols-2">
         <div>
           <div className="text-sm font-medium text-[hsl(var(--fg))]">Title</div>
@@ -387,6 +544,122 @@ export function ProductForm({
             step="1"
             className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none focus:border-black/20 dark:focus:border-white/20"
           />
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/60 p-4 backdrop-blur">
+        <div className="text-sm font-medium text-[hsl(var(--fg))]">Flipkart Details</div>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <label className="flex items-center gap-2 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-3 py-2 text-sm text-[hsl(var(--fg))]">
+            <input
+              type="checkbox"
+              checked={Boolean(values.flipkartAssured)}
+              onChange={(e) => setValues((v) => ({ ...v, flipkartAssured: e.target.checked }))}
+            />
+            Flipkart Assured
+          </label>
+
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Cash on Delivery</div>
+            <input
+              value={values.cashOnDelivery}
+              onChange={(e) => setValues((v) => ({ ...v, cashOnDelivery: e.target.value }))}
+              className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="yes / no"
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Return Policy (days)</div>
+            <input
+              value={values.returnPolicyDays}
+              onChange={(e) => setValues((v) => ({ ...v, returnPolicyDays: e.target.value }))}
+              type="number"
+              min="0"
+              step="1"
+              className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none focus:border-black/20 dark:focus:border-white/20"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Highlights (one per line)</div>
+            <textarea
+              value={values.highlightsText}
+              onChange={(e) => setValues((v) => ({ ...v, highlightsText: e.target.value }))}
+              rows={6}
+              className="mt-2 w-full resize-none rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="Brand: ...\nQuantity: ..."
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Scraped Offers (one per line)</div>
+            <textarea
+              value={values.scrapedOffersText}
+              onChange={(e) => setValues((v) => ({ ...v, scrapedOffersText: e.target.value }))}
+              rows={6}
+              className="mt-2 w-full resize-none rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="Offer 1..."
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Specifications (key: value per line)</div>
+            <textarea
+              value={values.specsText}
+              onChange={(e) => setValues((v) => ({ ...v, specsText: e.target.value }))}
+              rows={7}
+              className="mt-2 w-full resize-none rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="Model Number: ..."
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Manufacturer Info (key: value per line)</div>
+            <textarea
+              value={values.manufacturerInfoText}
+              onChange={(e) => setValues((v) => ({ ...v, manufacturerInfoText: e.target.value }))}
+              rows={7}
+              className="mt-2 w-full resize-none rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="Manufacturer: ..."
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Scraped Product ID</div>
+            <input
+              value={values.scrapedProductId}
+              onChange={(e) => setValues((v) => ({ ...v, scrapedProductId: e.target.value }))}
+              className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="pid=..."
+            />
+          </div>
+
+          <div>
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Scraped Product URL</div>
+            <input
+              value={values.scrapedProductUrl}
+              onChange={(e) => setValues((v) => ({ ...v, scrapedProductUrl: e.target.value }))}
+              className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder="https://..."
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <div className="text-sm font-medium text-[hsl(var(--fg))]">Scraped At (ISO)</div>
+            <input
+              value={values.scrapedAt}
+              onChange={(e) => setValues((v) => ({ ...v, scrapedAt: e.target.value }))}
+              className="mt-2 w-full rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))]/70 px-4 py-3 text-sm text-[hsl(var(--fg))] outline-none placeholder:text-[hsl(var(--muted-fg))] focus:border-black/20 dark:focus:border-white/20"
+              placeholder={new Date().toISOString()}
+            />
+          </div>
         </div>
       </div>
 
